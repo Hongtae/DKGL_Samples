@@ -24,6 +24,9 @@
     <ClInclude Include="..\Common\app.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Common\Win32\SampleApp.ico">
@@ -43,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\dkgl_new.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\app.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

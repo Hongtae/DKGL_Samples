@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\app.h" />
+    <ClInclude Include="..\Common\util.h" />
     <ClInclude Include="..\Common\Win32\Resource.h" />
     <ClInclude Include="..\Common\Win32\stdafx.h" />
     <ClInclude Include="..\Common\Win32\targetver.h" />
@@ -32,7 +33,6 @@
     <ResourceCompile Include="..\Common\Win32\SampleApp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\app.cpp" />
     <ClCompile Include="..\Common\dkgl_new.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
@@ -121,6 +121,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Resource Files...
+xcopy /Y /D /R /Q /E "$(SolutionDir)Samples\Data" "$(OutDir)Data\"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -134,6 +139,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Resource Files...
+xcopy /Y /D /R /Q /E "$(SolutionDir)Samples\Data" "$(OutDir)Data\"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -151,6 +161,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Resource Files...
+xcopy /Y /D /R /Q /E "$(SolutionDir)Samples\Data" "$(OutDir)Data\"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -168,6 +183,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Resource Files...
+xcopy /Y /D /R /Q /E "$(SolutionDir)Samples\Data" "$(OutDir)Data\"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
