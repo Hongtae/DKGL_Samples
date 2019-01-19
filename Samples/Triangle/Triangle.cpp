@@ -147,7 +147,7 @@ public:
 				encoder->SetIndexBuffer(indexBuffer, 0, DKIndexType::UInt32);
                 encoder->SetResources(0, bindSet);
 				// draw scene!
-				encoder->DrawIndexed(indexData.Count(), 1, 0, 0, 1);
+				encoder->DrawIndexed(indexData.Count(), 1, 0, 0, 0);
 				encoder->EndEncoding();
 				buffer->Commit();
 				swapChain->Present();
