@@ -12,8 +12,8 @@ class TriangleDemo : public SampleApp
 public:
 	void RenderThread(void)
 	{
-		DKObject<DKData> vertData = resourcePool.LoadResourceData("triangle.vert.spv");
-		DKObject<DKData> fragData = resourcePool.LoadResourceData("triangle.frag.spv");
+		DKObject<DKData> vertData = resourcePool.LoadResourceData("shaders/triangle.vert.spv");
+		DKObject<DKData> fragData = resourcePool.LoadResourceData("shaders/triangle.frag.spv");
 		DKShader vertShader(vertData);
 		DKShader fragShader(fragData);
 

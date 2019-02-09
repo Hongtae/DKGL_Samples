@@ -220,8 +220,8 @@ void PrintShaderReflection(const DKShader* shader, DKLogCategory c = DKLogCatego
     for (int i = 0; i < shader->InputAttributes().Count(); ++i)
     {
         const DKShaderAttribute& attr = shader->InputAttributes().Value(i);
-        DKLog(c, "  [in] ShaderAttribute[%d]: \"%ls\" (location:%u)",
-            i, (const wchar_t*)attr.name, attr.location);
+        DKLog(c, "  [in] ShaderAttribute[%d]: \"%ls\" (type:%s, location:%u)",
+            i, (const wchar_t*)attr.name, ShaderDataTypeStr(attr.type), attr.location);
     }
     DKLog(c, "---------------------------------------------------------");
     DKLog(c, "Shader<%ls.SPIR-V>.OutputAttributes: %d",
@@ -229,8 +229,8 @@ void PrintShaderReflection(const DKShader* shader, DKLogCategory c = DKLogCatego
     for (int i = 0; i < shader->OutputAttributes().Count(); ++i)
     {
         const DKShaderAttribute& attr = shader->OutputAttributes().Value(i);
-        DKLog(c, "  [out] ShaderAttribute[%d]: \"%ls\" (location:%u)",
-            i, (const wchar_t*)attr.name, attr.location);
+        DKLog(c, "  [out] ShaderAttribute[%d]: \"%ls\" (type:%s, location:%u)",
+            i, (const wchar_t*)attr.name, ShaderDataTypeStr(attr.type), attr.location);
     }
     DKLog(c, "---------------------------------------------------------");
     DKLog(c, "Shader<%ls.SPIR-V>.Resources: %d",
@@ -254,8 +254,8 @@ void PrintPipelineReflection(const DKPipelineReflection* reflection, DKLogCatego
     for (int i = 0; i < reflection->inputAttributes.Count(); ++i)
     {
         const DKShaderAttribute& attr = reflection->inputAttributes.Value(i);
-        DKLog(c, "  [in] ShaderAttribute[%d]: \"%ls\" (location:%u)",
-            i, (const wchar_t*)attr.name, attr.location);
+        DKLog(c, "  [in] ShaderAttribute[%d]: \"%ls\" (type:%s, location:%u)",
+            i, (const wchar_t*)attr.name, ShaderDataTypeStr(attr.type), attr.location);
     }
     DKLog(c, "---------------------------------------------------------");
     DKLog(c, "PipelineReflection.Resources: %d", reflection->resources.Count());

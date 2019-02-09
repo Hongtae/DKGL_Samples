@@ -1,4 +1,4 @@
-
+#include <cstddef>
 #include "app.h"
 #include "util.h"
 
@@ -10,14 +10,41 @@ class TextureDemo : public SampleApp
 	DKAtomicNumber32 runningRenderThread;
 
 public:
+    DKObject<DKTexture> LoadTexture2D(DKGraphicsDevice* device, DKData* data)
+    {
+        DKObject<DKImage> image = DKImage::Create(data);
+        if (image)
+        {
+            DKTextureDescriptor texDesc = {};
+            texDesc.textureType = DKTexture::Type2D;
+            texDesc.pixelFormat = DKPixelFormat::RGBA8Unorm;
+            texDesc.width = image->Width();
+            texDesc.height = image->Height();
+            texDesc.depth = 1;
+            texDesc.mipmapLevels = 1;
+            texDesc.sampleCount = 1;
+            texDesc.arrayLength = 1;
+            texDesc.usage = DKTexture::UsageCopyDestination | DKTexture::UsageSampled;
+            DKObject<DKTexture> tex = device->CreateTexture(texDesc);
+            if (tex)
+            {
+                DKLog("Texture created!");
+            }
+        }
+        return nullptr;
+    }
 	void RenderThread(void)
 	{
-		DKObject<DKData> vertData = resourcePool.LoadResourceData("triangle.vert.spv");
-		DKObject<DKData> fragData = resourcePool.LoadResourceData("triangle.frag.spv");
+		DKObject<DKData> vertData = resourcePool.LoadResourceData("shaders/texture.vert.spv");
+		DKObject<DKData> fragData = resourcePool.LoadResourceData("shaders/texture.frag.spv");
 		DKShader vertShader(vertData);
 		DKShader fragShader(fragData);
 
 		DKObject<DKGraphicsDevice> device = DKGraphicsDevice::SharedInstance();
+
+        // create texture
+        DKObject<DKTexture> texture = LoadTexture2D(device, resourcePool.LoadResourceData("textures/deathstar3.png"));
+
 		DKObject<DKShaderModule> vertShaderModule = device->CreateShaderModule(&vertShader);
 		DKObject<DKShaderModule> fragShaderModule = device->CreateShaderModule(&fragShader);
 
@@ -36,17 +63,19 @@ public:
 
 		struct Vertex
 		{
-			DKVector3 position;
-			DKVector3 color;
+			DKVector3 inPos;
+            DKVector2 inUV;
+            DKVector3 inNormal;
 		};
 		DKArray<Vertex> vertexData =
 		{
-			{ {  0.0f, -0.5f, 0.0f },{ 1.0f, 1.0f, 1.0f } },
-			{ {  0.5f,  0.5f, 0.0f },{ 0.0f, 1.0f, 0.0f } },
-			{ { -0.5f,  0.5f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
+            { {  1.0f,  1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+            { { -1.0f,  1.0f, 0.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+            { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+            { {  1.0f, -1.0f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } }
 		};
 		uint32_t vertexBufferSize = static_cast<uint32_t>(vertexData.Count()) * sizeof(Vertex);
-		DKArray<uint32_t> indexData = { 0, 1, 2 };
+        DKArray<uint32_t> indexData = { 0, 1, 2, 2, 3, 0 };
 		uint32_t indexBufferSize = indexData.Count() * sizeof(uint32_t);
 
 		DKObject<DKGpuBuffer> vertexBuffer = device->CreateBuffer(vertexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeDefault);
@@ -65,7 +94,8 @@ public:
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, 0, 0, 0 },
-			{ DKVertexFormat::Float3, sizeof(DKVector3), 0, 1 },
+            { DKVertexFormat::Float2, offsetof(Vertex, inUV), 0, 1 },
+			{ DKVertexFormat::Float3, offsetof(Vertex, inNormal), 0, 2 },
 		};
 		pipelineDescriptor.vertexDescriptor.layouts = {
 			{ DKVertexStepRate::Vertex, sizeof(Vertex), 0 },
