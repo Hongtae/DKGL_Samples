@@ -49,13 +49,11 @@ public:
 		DKArray<uint32_t> indexData = { 0, 1, 2 };
 		uint32_t indexBufferSize = indexData.Count() * sizeof(uint32_t);
 
-		DKObject<DKGpuBuffer> vertexBuffer = device->CreateBuffer(vertexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeDefault);
-		memcpy(vertexBuffer->Lock(), vertexData, vertexBufferSize);
-		vertexBuffer->Unlock();
+		DKObject<DKGpuBuffer> vertexBuffer = device->CreateBuffer(vertexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
+		memcpy(vertexBuffer->Contents(), vertexData, vertexBufferSize);
 
-		DKObject<DKGpuBuffer> indexBuffer = device->CreateBuffer(indexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeDefault);
-		memcpy(indexBuffer->Lock(), indexData, indexBufferSize);
-		indexBuffer->Unlock();
+		DKObject<DKGpuBuffer> indexBuffer = device->CreateBuffer(indexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
+		memcpy(indexBuffer->Contents(), indexData, indexBufferSize);
 
 		DKRenderPipelineDescriptor pipelineDescriptor;
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
@@ -105,25 +103,15 @@ public:
                 DKMatrix4 viewMatrix;
             } ubo;
 
-            DKObject<DKGpuBuffer> uboBuffer = device->CreateBuffer(sizeof(ubo), DKGpuBuffer::StorageModeShared, DKCpuCacheModeDefault);
+            DKObject<DKGpuBuffer> uboBuffer = device->CreateBuffer(sizeof(ubo), DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
             if (uboBuffer)
             {
                 ubo.projectionMatrix = DKMatrix4::identity;
                 ubo.modelMatrix = DKMatrix4::identity;
                 ubo.viewMatrix = DKMatrix4::identity;
 
-                void* p = uboBuffer->Lock(0);
-                if (p)
-                {
-                    memcpy(p, &ubo, sizeof(ubo));
-                    uboBuffer->Unlock();
-
-                    bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
-                }
-                else
-                {
-                    DKLogE("GpuBuffer Lock failed!");
-                }
+                memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
+                bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
             }
         }
 
