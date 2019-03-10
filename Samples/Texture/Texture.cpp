@@ -50,6 +50,7 @@ public:
                 cb->Commit();
 
                 DKLog("Texture created!");
+                return tex;
             }
         }
         return nullptr;
@@ -101,9 +102,11 @@ public:
 
 		DKObject<DKGpuBuffer> vertexBuffer = device->CreateBuffer(vertexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
 		memcpy(vertexBuffer->Contents(), vertexData, vertexBufferSize);
+        vertexBuffer->Flush();
 
 		DKObject<DKGpuBuffer> indexBuffer = device->CreateBuffer(indexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
 		memcpy(indexBuffer->Contents(), indexData, indexBufferSize);
+        indexBuffer->Flush();
 
 		DKRenderPipelineDescriptor pipelineDescriptor;
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
@@ -163,6 +166,7 @@ public:
 
                 memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
                 bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
+                uboBuffer->Flush();
             }
         }
 
