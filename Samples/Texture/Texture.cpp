@@ -10,11 +10,12 @@ class TextureDemo : public SampleApp
 	DKAtomicNumber32 runningRenderThread;
 
 public:
-    DKObject<DKTexture> LoadTexture2D(DKGraphicsDevice* device, DKData* data)
+    DKObject<DKTexture> LoadTexture2D(DKCommandQueue* queue, DKData* data)
     {
         DKObject<DKImage> image = DKImage::Create(data);
         if (image)
         {
+            DKGraphicsDevice* device = queue->Device();
             DKTextureDescriptor texDesc = {};
             texDesc.textureType = DKTexture::Type2D;
             texDesc.pixelFormat = DKPixelFormat::RGBA8Unorm;
@@ -28,6 +29,26 @@ public:
             DKObject<DKTexture> tex = device->CreateTexture(texDesc);
             if (tex)
             {
+                size_t bytesPerPixel = image->BytesPerPixel();
+                uint32_t width = image->Width();
+                uint32_t height = image->Height();
+
+                size_t bufferLength = bytesPerPixel * width * height;
+                DKObject<DKGpuBuffer> stagingBuffer = device->CreateBuffer(bufferLength, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
+                
+                memcpy(stagingBuffer->Contents(), image->Contents(), bufferLength);
+                stagingBuffer->Flush();
+
+                DKObject<DKCommandBuffer> cb = queue->CreateCommandBuffer();
+                DKObject<DKCopyCommandEncoder> encoder = cb->CreateCopyCommandEncoder();
+                encoder->CopyFromBufferToTexture(stagingBuffer,
+                                                 { 0, uint32_t(bytesPerPixel * width), height },
+                                                 tex,
+                                                 { 0,0, 0,0,0 },
+                                                 { width,height,1 });
+                encoder->EndEncoding();
+                cb->Commit();
+
                 DKLog("Texture created!");
             }
         }
@@ -41,9 +62,10 @@ public:
 		DKShader fragShader(fragData);
 
 		DKObject<DKGraphicsDevice> device = DKGraphicsDevice::SharedInstance();
+        DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 
         // create texture
-        DKObject<DKTexture> texture = LoadTexture2D(device, resourcePool.LoadResourceData("textures/deathstar3.png"));
+        DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/deathstar3.png"));
 
 		DKObject<DKShaderModule> vertShaderModule = device->CreateShaderModule(&vertShader);
 		DKObject<DKShaderModule> fragShaderModule = device->CreateShaderModule(&fragShader);
@@ -51,7 +73,6 @@ public:
 		DKObject<DKShaderFunction> vertShaderFunction = vertShaderModule->CreateFunction(vertShaderModule->FunctionNames().Value(0));
 		DKObject<DKShaderFunction> fragShaderFunction = fragShaderModule->CreateFunction(fragShaderModule->FunctionNames().Value(0));
 
-		DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 		DKObject<DKSwapChain> swapChain = queue->CreateSwapChain(window);
 
 		DKLog("VertexFunction.VertexAttributes: %d", vertShaderFunction->StageInputAttributes().Count());
