@@ -42,7 +42,7 @@ public:
                 DKObject<DKCommandBuffer> cb = queue->CreateCommandBuffer();
                 DKObject<DKCopyCommandEncoder> encoder = cb->CreateCopyCommandEncoder();
                 encoder->CopyFromBufferToTexture(stagingBuffer,
-                                                 { 0, uint32_t(bytesPerPixel * width), height },
+                                                 { 0, width, height },
                                                  tex,
                                                  { 0,0, 0,0,0 },
                                                  { width,height,1 });
