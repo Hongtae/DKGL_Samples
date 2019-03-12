@@ -67,7 +67,11 @@ public:
 
         // create texture
         DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/deathstar3.png"));
+        // create sampler
+        DKSamplerDescriptor samplerDesc = {};
+        DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
 
+        // create shaders
 		DKObject<DKShaderModule> vertShaderModule = device->CreateShaderModule(&vertShader);
 		DKObject<DKShaderModule> fragShaderModule = device->CreateShaderModule(&fragShader);
 
