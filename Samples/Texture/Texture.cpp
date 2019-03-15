@@ -65,12 +65,6 @@ public:
 		DKObject<DKGraphicsDevice> device = DKGraphicsDevice::SharedInstance();
         DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 
-        // create texture
-        DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/deathstar3.png"));
-        // create sampler
-        DKSamplerDescriptor samplerDesc = {};
-        DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
-
         // create shaders
 		DKObject<DKShaderModule> vertShaderModule = device->CreateShaderModule(&vertShader);
 		DKObject<DKShaderModule> fragShaderModule = device->CreateShaderModule(&fragShader);
@@ -95,10 +89,10 @@ public:
 		};
 		DKArray<Vertex> vertexData =
 		{
-            { {  1.0f,  1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-            { { -1.0f,  1.0f, 0.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-            { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-            { {  1.0f, -1.0f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } }
+            { {  0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+            { { -0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+            { { -0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+            { {  0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } }
 		};
 		uint32_t vertexBufferSize = static_cast<uint32_t>(vertexData.Count()) * sizeof(Vertex);
         DKArray<uint32_t> indexData = { 0, 1, 2, 2, 3, 0 };
@@ -117,6 +111,9 @@ public:
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
+        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = true;
+        pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, 0, 0, 0 },
@@ -143,13 +140,21 @@ public:
         DKShaderBindingSetLayout layout;
         if (1)
         {
-            DKShaderBinding binding = {
-                0,
-                DKShader::DescriptorTypeUniformBuffer,
-                1,
-                nullptr
+            DKShaderBinding bindings[2] = {
+                {
+                    0,
+                    DKShader::DescriptorTypeUniformBuffer,
+                    1,
+                    nullptr
+                },
+                {
+                    1,
+                    DKShader::DescriptorTypeTextureSampler,
+                    1,
+                    nullptr
+                },
             };
-            layout.bindings.Add(binding);
+            layout.bindings.Add(bindings, 2);
         }
         DKObject<DKShaderBindingSet> bindSet = device->CreateShaderBindingSet(layout);
         if (bindSet)
@@ -172,6 +177,15 @@ public:
                 bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
                 uboBuffer->Flush();
             }
+
+            // create texture
+            DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/deathstar3.png"));
+            // create sampler
+            DKSamplerDescriptor samplerDesc = {};
+            DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
+
+            bindSet->SetTexture(1, texture);
+            bindSet->SetSamplerState(1, sampler);
         }
 
 		DKTimer timer;
