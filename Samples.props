@@ -9,7 +9,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalIncludeDirectories>../../DK;../Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DKGL_STATIC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
