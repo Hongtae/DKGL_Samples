@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Triangle", "Samples\Triangle\Triangle.vcxproj", "{35653A85-73BD-4392-A323-FB5C6DAE6F43}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DK_static", "DK\DK_static.vcxproj", "{C7312831-A3F6-4E7D-962B-6786972F0A6A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DK_static", "dk\DK_static.vcxproj", "{C7312831-A3F6-4E7D-962B-6786972F0A6A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texture", "Samples\Texture\Texture.vcxproj", "{4E5AF9B5-BE2E-4A64-B3FC-FC1A8351ED11}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mesh", "Samples\Mesh\Mesh.vcxproj", "{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{4E5AF9B5-BE2E-4A64-B3FC-FC1A8351ED11}.Release|x64.Build.0 = Release|x64
 		{4E5AF9B5-BE2E-4A64-B3FC-FC1A8351ED11}.Release|x86.ActiveCfg = Release|Win32
 		{4E5AF9B5-BE2E-4A64-B3FC-FC1A8351ED11}.Release|x86.Build.0 = Release|Win32
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Debug|x64.ActiveCfg = Debug|x64
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Debug|x64.Build.0 = Debug|x64
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Debug|x86.ActiveCfg = Debug|Win32
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Debug|x86.Build.0 = Debug|Win32
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Release|x64.ActiveCfg = Release|x64
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Release|x64.Build.0 = Release|x64
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Release|x86.ActiveCfg = Release|Win32
+		{B26FBAF5-AD65-4E87-B0B3-5D7FA63C9228}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

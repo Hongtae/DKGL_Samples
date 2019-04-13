@@ -3,7 +3,7 @@
 #include "util.h"
 
 
-class TextureDemo : public SampleApp
+class MeshDemo : public SampleApp
 {
     DKObject<DKWindow> window;
 	DKObject<DKThread> renderThread;
@@ -239,7 +239,7 @@ public:
         }), NULL, NULL);
 
 		runningRenderThread = 1;
-		renderThread = DKThread::Create(DKFunction(this, &TextureDemo::RenderThread)->Invocation());
+		renderThread = DKThread::Create(DKFunction(this, &MeshDemo::RenderThread)->Invocation());
 	}
 	void OnTerminate(void) override
 	{
@@ -264,7 +264,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 int main(int argc, const char * argv[])
 #endif
 {
-    TextureDemo app;
+    MeshDemo app;
 	DKPropertySet::SystemConfig().SetValue("AppDelegate", "AppDelegate");
 	DKPropertySet::SystemConfig().SetValue("GraphicsAPI", "Vulkan");
 	return app.Run();
