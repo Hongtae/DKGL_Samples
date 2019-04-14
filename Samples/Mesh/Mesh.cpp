@@ -88,6 +88,8 @@ public:
 				}
 
 				indices.Add(uniqueVertices.Value(vertex));
+
+                aabb.Expand(vertex.inPos);
 			}
 		}
 	}
@@ -101,6 +103,7 @@ public:
 	const uint32_t* GetIndicesData() const { 
 		return indices; }
 
+    DKAabb aabb;
 private:
 	DKArray<Vertex> vertices;
 	DKArray<uint32_t> indices;
@@ -129,7 +132,8 @@ public:
 	{
 		
 		DKLog("Loading Mesh");
-		SampleMesh->LoadFromObjFile("..\\Data\\meshes\\car.obj");
+        DKString path = resourcePool.ResourceFilePath("meshes/car.obj");
+		SampleMesh->LoadFromObjFile(DKStringU8(path));
 	}
 
     DKObject<DKTexture> LoadTexture2D(DKCommandQueue* queue, DKData* data)
@@ -188,14 +192,14 @@ public:
         DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 
 		// create texture
-		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/deathstar3.png"));
+		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/koo.jpg"));
 		// create sampler
 		DKSamplerDescriptor samplerDesc = {};
 		samplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
 		samplerDesc.minFilter = DKSamplerDescriptor::MinMagFilterLinear;
-		samplerDesc.addressModeU = DKSamplerDescriptor::AddressModeRepeat;
-		samplerDesc.addressModeV = DKSamplerDescriptor::AddressModeRepeat;
-		samplerDesc.addressModeW = DKSamplerDescriptor::AddressModeRepeat;
+		samplerDesc.addressModeU = DKSamplerDescriptor::AddressModeClampToEdge;
+		samplerDesc.addressModeV = DKSamplerDescriptor::AddressModeClampToEdge;
+		samplerDesc.addressModeW = DKSamplerDescriptor::AddressModeClampToEdge;
 		samplerDesc.maxAnisotropy = 16;
 		
 		DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
@@ -233,7 +237,7 @@ public:
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
-        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = true;
+        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = false;
         pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
         pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
@@ -295,6 +299,10 @@ public:
                 ubo.modelMatrix = DKMatrix4::identity;
                 ubo.viewMatrix = DKMatrix4::identity;
 
+                DKAffineTransform3 trans;
+                trans.Multiply(DKLinearTransform3().Scale(0.25).Rotate(DKVector3(1,1,1), DKGL_PI * 0.1));
+                ubo.modelMatrix.Multiply(trans.Matrix4());
+
                 memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
                 bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
                 uboBuffer->Flush();
@@ -333,7 +341,7 @@ public:
 			else
 			{
 			}
-			DKThread::Sleep(0.5);
+			DKThread::Sleep(0.01);
 		}
 		DKLog("RenderThread terminating...");
 	}
@@ -355,10 +363,7 @@ public:
                 DKApplication::Instance()->Terminate(0);
         }), NULL, NULL);
 
-		if (SampleMesh == nullptr)
-		{
-			SampleMesh = new SampleObjMesh;
-		}
+        SampleMesh = DKOBJECT_NEW SampleObjMesh();
 
 		LoadMesh();
 
