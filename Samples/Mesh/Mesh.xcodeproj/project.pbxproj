@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		66DA89941DD3117F00338015 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Texture.cpp */; };
-		66DA89971DD3118000338015 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Texture.cpp */; };
+		66DA89941DD3117F00338015 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Mesh.cpp */; };
+		66DA89971DD3118000338015 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Mesh.cpp */; };
 		8406D1D821E715E400E0EA0F /* libDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8406D1BF21E701FF00E0EA0F /* libDK.a */; };
 		8406D1F921E71C5500E0EA0F /* libDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8406D1C121E701FF00E0EA0F /* libDK.a */; };
 		841948EB1DDCBE6000E039F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 841948E91DDCBE5000E039F0 /* AppDelegate.m */; };
@@ -18,8 +18,10 @@
 		844A9A851DD0C080007DCC89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 844A9A781DD0C080007DCC89 /* Assets.xcassets */; };
 		844A9A8B1DD0C08F007DCC89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 844A9A741DD0C080007DCC89 /* Assets.xcassets */; };
 		844A9A8D1DD0C08F007DCC89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 844A9A761DD0C080007DCC89 /* LaunchScreen.storyboard */; };
-		84B5FE4E20726C3600B52742 /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
-		84B5FE4F20726C3600B52742 /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
+		84A81E9D226443700060BCBB /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 84A81E9C226443700060BCBB /* tiny_obj_loader.cc */; };
+		84A81E9E226443700060BCBB /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 84A81E9C226443700060BCBB /* tiny_obj_loader.cc */; };
+		84A81EAF22644A7D0060BCBB /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
+		84A81EB222644A7E0060BCBB /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,8 +76,8 @@
 		841948EC1DDCBE7500E039F0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		841948ED1DDCBE7500E039F0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		8420EE1F1EE5BA6500A20933 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = ../Data; sourceTree = "<group>"; };
-		844A9A441DD0BCFD007DCC89 /* Texture_macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Texture_macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		844A9A5C1DD0BEDD007DCC89 /* Texture_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Texture_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		844A9A441DD0BCFD007DCC89 /* Mesh_macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mesh_macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		844A9A5C1DD0BEDD007DCC89 /* Mesh_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mesh_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		844A9A741DD0C080007DCC89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		844A9A751DD0C080007DCC89 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		844A9A761DD0C080007DCC89 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -86,7 +88,8 @@
 		844A9A7D1DD0C080007DCC89 /* targetver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = targetver.h; sourceTree = "<group>"; };
 		844A9A7E1DD0C080007DCC89 /* SampleApp.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = SampleApp.ico; sourceTree = "<group>"; };
 		844A9A7F1DD0C080007DCC89 /* SampleApp.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SampleApp.rc; sourceTree = "<group>"; };
-		844A9A801DD0C080007DCC89 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
+		844A9A801DD0C080007DCC89 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		84A81E9C226443700060BCBB /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tiny_obj_loader.cc; path = ../Libs/tinyobjLoader/tiny_obj_loader.cc; sourceTree = "<group>"; };
 		84B5FE4B20726C3600B52742 /* dkgl_new.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dkgl_new.cpp; sourceTree = "<group>"; };
 		84B81E9021E6FF8400E0C5FF /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = app.h; sourceTree = "<group>"; };
 		84B81E9121E6FF8400E0C5FF /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
@@ -145,8 +148,8 @@
 		844A9A451DD0BCFD007DCC89 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				844A9A441DD0BCFD007DCC89 /* Texture_macOS.app */,
-				844A9A5C1DD0BEDD007DCC89 /* Texture_iOS.app */,
+				844A9A441DD0BCFD007DCC89 /* Mesh_macOS.app */,
+				844A9A5C1DD0BEDD007DCC89 /* Mesh_iOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -154,7 +157,8 @@
 		844A9A461DD0BCFD007DCC89 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				844A9A801DD0C080007DCC89 /* Texture.cpp */,
+				84A81E9C226443700060BCBB /* tiny_obj_loader.cc */,
+				844A9A801DD0C080007DCC89 /* Mesh.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -211,9 +215,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		844A9A431DD0BCFD007DCC89 /* Texture_macOS */ = {
+		844A9A431DD0BCFD007DCC89 /* Mesh_macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 844A9A551DD0BCFD007DCC89 /* Build configuration list for PBXNativeTarget "Texture_macOS" */;
+			buildConfigurationList = 844A9A551DD0BCFD007DCC89 /* Build configuration list for PBXNativeTarget "Mesh_macOS" */;
 			buildPhases = (
 				844A9A401DD0BCFD007DCC89 /* Sources */,
 				844A9A411DD0BCFD007DCC89 /* Frameworks */,
@@ -224,14 +228,14 @@
 			dependencies = (
 				8406D1DC21E715FD00E0EA0F /* PBXTargetDependency */,
 			);
-			name = Texture_macOS;
+			name = Mesh_macOS;
 			productName = TestApp1;
-			productReference = 844A9A441DD0BCFD007DCC89 /* Texture_macOS.app */;
+			productReference = 844A9A441DD0BCFD007DCC89 /* Mesh_macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		844A9A5B1DD0BEDD007DCC89 /* Texture_iOS */ = {
+		844A9A5B1DD0BEDD007DCC89 /* Mesh_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 844A9A701DD0BEDD007DCC89 /* Build configuration list for PBXNativeTarget "Texture_iOS" */;
+			buildConfigurationList = 844A9A701DD0BEDD007DCC89 /* Build configuration list for PBXNativeTarget "Mesh_iOS" */;
 			buildPhases = (
 				844A9A581DD0BEDD007DCC89 /* Sources */,
 				844A9A591DD0BEDD007DCC89 /* Frameworks */,
@@ -242,9 +246,9 @@
 			dependencies = (
 				8406D1DA21E715F400E0EA0F /* PBXTargetDependency */,
 			);
-			name = Texture_iOS;
+			name = Mesh_iOS;
 			productName = TestApp1_iOS;
-			productReference = 844A9A5C1DD0BEDD007DCC89 /* Texture_iOS.app */;
+			productReference = 844A9A5C1DD0BEDD007DCC89 /* Mesh_iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -267,11 +271,12 @@
 					};
 				};
 			};
-			buildConfigurationList = 844A9A3F1DD0BCFD007DCC89 /* Build configuration list for PBXProject "Texture" */;
+			buildConfigurationList = 844A9A3F1DD0BCFD007DCC89 /* Build configuration list for PBXProject "Mesh" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -286,8 +291,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				844A9A431DD0BCFD007DCC89 /* Texture_macOS */,
-				844A9A5B1DD0BEDD007DCC89 /* Texture_iOS */,
+				844A9A431DD0BCFD007DCC89 /* Mesh_macOS */,
+				844A9A5B1DD0BEDD007DCC89 /* Mesh_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -350,9 +355,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A81EAF22644A7D0060BCBB /* dkgl_new.cpp in Sources */,
 				841948EF1DDCBE7B00E039F0 /* AppDelegate.m in Sources */,
-				84B5FE4E20726C3600B52742 /* dkgl_new.cpp in Sources */,
-				66DA89941DD3117F00338015 /* Texture.cpp in Sources */,
+				84A81E9D226443700060BCBB /* tiny_obj_loader.cc in Sources */,
+				66DA89941DD3117F00338015 /* Mesh.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,9 +366,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A81EB222644A7E0060BCBB /* dkgl_new.cpp in Sources */,
 				841948EB1DDCBE6000E039F0 /* AppDelegate.m in Sources */,
-				84B5FE4F20726C3600B52742 /* dkgl_new.cpp in Sources */,
-				66DA89971DD3118000338015 /* Texture.cpp in Sources */,
+				84A81E9E226443700060BCBB /* tiny_obj_loader.cc in Sources */,
+				66DA89971DD3118000338015 /* Mesh.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,7 +554,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		844A9A3F1DD0BCFD007DCC89 /* Build configuration list for PBXProject "Texture" */ = {
+		844A9A3F1DD0BCFD007DCC89 /* Build configuration list for PBXProject "Mesh" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				844A9A531DD0BCFD007DCC89 /* Debug */,
@@ -556,7 +563,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		844A9A551DD0BCFD007DCC89 /* Build configuration list for PBXNativeTarget "Texture_macOS" */ = {
+		844A9A551DD0BCFD007DCC89 /* Build configuration list for PBXNativeTarget "Mesh_macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				844A9A561DD0BCFD007DCC89 /* Debug */,
@@ -565,7 +572,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		844A9A701DD0BEDD007DCC89 /* Build configuration list for PBXNativeTarget "Texture_iOS" */ = {
+		844A9A701DD0BEDD007DCC89 /* Build configuration list for PBXNativeTarget "Mesh_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				844A9A711DD0BEDD007DCC89 /* Debug */,

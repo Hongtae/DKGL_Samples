@@ -18,16 +18,24 @@ public:
 
 		int Compare(const Vertex& Other) const
 		{
+            const float pp[] = { this->inPos.x, this->inPos.y, this->inPos.z,
+                this->inColor.x, this->inColor.y, this->inColor.z,
+                this->intexCoord.x, this->intexCoord.y};
+            const float rr[] = { Other.inPos.x, Other.inPos.y, Other.inPos.z,
+                Other.inColor.x, Other.inColor.y, Other.inColor.z,
+                Other.intexCoord.x, Other.intexCoord.y};
 
-			if ( this == &Other 
-				|| inPos == Other.inPos && inColor == Other.inColor && intexCoord == Other.intexCoord)
-			{
-				return 0;
-			}
-			else
-			{
-				return static_cast<int>(this - &Other);
-			}
+            for (int i = 0; i < std::size(pp); ++i)
+            {
+                auto k = pp[i] - rr[i];
+                if (abs(k) < 0.0001)
+                    continue;
+                if (k > 0)
+                    return 1;
+                else if (k < 0)
+                    return -1;
+            }
+            return 0;
 		}
 
 		bool operator > (const Vertex& Other) const
@@ -132,7 +140,7 @@ public:
 	{
 		
 		DKLog("Loading Mesh");
-        DKString path = resourcePool.ResourceFilePath("meshes/car.obj");
+        DKString path = resourcePool.ResourceFilePath("meshes/chalet.obj");
 		SampleMesh->LoadFromObjFile(DKStringU8(path));
 	}
 
@@ -156,6 +164,8 @@ public:
             if (tex)
             {
                 size_t bytesPerPixel = image->BytesPerPixel();
+                DKASSERT_DESC(bytesPerPixel == DKPixelFormatBytesPerPixel(texDesc.pixelFormat), "BytesPerPixel mismatch!");
+
                 uint32_t width = image->Width();
                 uint32_t height = image->Height();
 
@@ -192,7 +202,7 @@ public:
         DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 
 		// create texture
-		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("textures/koo.jpg"));
+		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("meshes/chalet.png"));
 		// create sampler
 		DKSamplerDescriptor samplerDesc = {};
 		samplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
@@ -300,7 +310,7 @@ public:
                 ubo.viewMatrix = DKMatrix4::identity;
 
                 DKAffineTransform3 trans;
-                trans.Multiply(DKLinearTransform3().Scale(0.25).Rotate(DKVector3(1,1,1), DKGL_PI * 0.1));
+                trans.Multiply(DKLinearTransform3().Scale(0.25).Rotate(DKVector3(1,1,1), DKGL_PI * 0.25));
                 ubo.modelMatrix.Multiply(trans.Matrix4());
 
                 memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));

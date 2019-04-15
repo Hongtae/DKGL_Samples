@@ -5,6 +5,9 @@
       location = "container:"
       name = "Samples">
       <FileRef
+         location = "group:Samples/Mesh/Mesh.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Samples/Texture/Texture.xcodeproj">
       </FileRef>
       <FileRef
