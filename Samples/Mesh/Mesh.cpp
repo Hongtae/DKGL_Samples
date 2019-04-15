@@ -293,37 +293,46 @@ public:
             layout.bindings.Add(bindings, 2);
         }
         DKObject<DKShaderBindingSet> bindSet = device->CreateShaderBindingSet(layout);
+
+        struct UBO
+        {
+            DKMatrix4 projectionMatrix;
+            DKMatrix4 modelMatrix;
+            DKMatrix4 viewMatrix;
+        };
+        DKObject<DKGpuBuffer> uboBuffer = device->CreateBuffer(sizeof(UBO), DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
+        UBO* ubo = nullptr;
         if (bindSet)
         {
-            struct
-            {
-                DKMatrix4 projectionMatrix;
-                DKMatrix4 modelMatrix;
-                DKMatrix4 viewMatrix;
-            } ubo;
-
-            DKObject<DKGpuBuffer> uboBuffer = device->CreateBuffer(sizeof(ubo), DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
             if (uboBuffer)
             {
-                ubo.projectionMatrix = DKMatrix4::identity;
-                ubo.modelMatrix = DKMatrix4::identity;
-                ubo.viewMatrix = DKMatrix4::identity;
-
-                DKAffineTransform3 trans;
-                trans.Multiply(DKLinearTransform3().Scale(0.25).Rotate(DKVector3(1,1,1), DKGL_PI * 0.25));
-                ubo.modelMatrix.Multiply(trans.Matrix4());
-
-                memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
-                bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
+                ubo = reinterpret_cast<UBO*>(uboBuffer->Contents());
+                ubo->projectionMatrix = DKMatrix4::identity;
+                ubo->modelMatrix = DKMatrix4::identity;
+                ubo->viewMatrix = DKMatrix4::identity;
                 uboBuffer->Flush();
+
+                //DKAffineTransform3 trans;
+                //trans.Multiply(DKLinearTransform3().Scale(0.5).Rotate(DKVector3(0,1,0), DKGL_PI * 0.5));
+                //ubo.modelMatrix.Multiply(trans.Matrix4());
+
+                //memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
+                bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
             }
 			         
-
             bindSet->SetTexture(1, texture);
             bindSet->SetSamplerState(1, sampler);
         }
 
-		DKTimer timer;
+        DKObject<DKTexture> depthBuffer = nullptr;
+
+        DKCamera camera;
+        DKVector3 cameraPosition = { 0, 0, 10 };
+        DKVector3 cameraTartget = { 0, 0, 0 };
+
+        DKAffineTransform3 tm(DKLinearTransform3().Scale(4));
+
+        DKTimer timer;
 		timer.Reset();
 
 		DKLog("Render thread begin");
@@ -331,13 +340,55 @@ public:
 		{
 			DKRenderPassDescriptor rpd = swapChain->CurrentRenderPassDescriptor();
 			double t = timer.Elapsed();
-			t = (cos(t) + 1.0) * 0.5;
-			rpd.colorAttachments.Value(0).clearColor = DKColor(t, 0.0, 0.0, 0.0);
+			double waveT = (cos(t) + 1.0) * 0.5;
+			rpd.colorAttachments.Value(0).clearColor = DKColor(waveT, 0.0, 0.0, 0.0);
+
+            int width = rpd.colorAttachments.Value(0).renderTarget->Width();
+            int height = rpd.colorAttachments.Value(0).renderTarget->Height();
+            if (depthBuffer)
+            {
+                if (depthBuffer->Width() !=  width ||
+                    depthBuffer->Height() != height )
+                    depthBuffer = nullptr;
+            }
+            if (depthBuffer == nullptr)
+            {
+                // create depth buffer
+                DKTextureDescriptor texDesc = {};
+                texDesc.textureType = DKTexture::Type2D;
+                texDesc.pixelFormat = DKPixelFormat::D32Float;
+                texDesc.width = width;
+                texDesc.height = height;
+                texDesc.depth = 1;
+                texDesc.mipmapLevels = 1;
+                texDesc.sampleCount = 1;
+                texDesc.arrayLength = 1;
+                texDesc.usage = DKTexture::UsageShaderWrite | DKTexture::UsageRenderTarget;
+                depthBuffer = device->CreateTexture(texDesc);
+            }
+            rpd.depthStencilAttachment.renderTarget = depthBuffer;
+            rpd.depthStencilAttachment.loadAction = DKRenderPassAttachmentDescriptor::LoadActionClear;
+            rpd.depthStencilAttachment.storeAction = DKRenderPassAttachmentDescriptor::StoreActionDontCare;
 
 			DKObject<DKCommandBuffer> buffer = queue->CreateCommandBuffer();
 			DKObject<DKRenderCommandEncoder> encoder = buffer->CreateRenderCommandEncoder(rpd);
 			if (encoder)
 			{
+                if (bindSet && ubo)
+                {
+                    camera.SetView(cameraPosition, cameraTartget - cameraPosition, DKVector3(0, 1, 0));
+                    camera.SetPerspective(DKGL_DEGREE_TO_RADIAN(90), float(width)/float(height), 1, 1000);
+
+                    ubo->projectionMatrix = camera.ProjectionMatrix();
+                    ubo->viewMatrix = camera.ViewMatrix();
+
+                    DKQuaternion quat(DKVector3(0, 1, 0), t);
+                    DKAffineTransform3 trans = tm * DKAffineTransform3(quat);
+                    ubo->modelMatrix = trans.Matrix4();
+                    uboBuffer->Flush();
+                    bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
+                }
+
 				encoder->SetRenderPipelineState(pipelineState);
 				encoder->SetVertexBuffer(vertexBuffer, 0, 0);
 				encoder->SetIndexBuffer(indexBuffer, 0, DKIndexType::UInt32);
