@@ -250,7 +250,7 @@ public:
         pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = false;
         pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
         pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
-		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
+		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, offsetof(SampleObjMesh::Vertex, inPos), 0, 0 },
             { DKVertexFormat::Float3, offsetof(SampleObjMesh::Vertex, inColor), 0, 1 },
@@ -263,8 +263,14 @@ public:
 		pipelineDescriptor.frontFace = DKFrontFace::CCW;
 		pipelineDescriptor.triangleFillMode = DKTriangleFillMode::Fill;
 		pipelineDescriptor.depthClipMode = DKDepthClipMode::Clip;
-		pipelineDescriptor.cullMode = DKCullMode::None;
+		pipelineDescriptor.cullMode = DKCullMode::Back;
 		pipelineDescriptor.rasterizationEnabled = true;
+
+
+		pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;
+		pipelineDescriptor.depthStencilDescriptor.depthCompareFunction = DKCompareFunction::DKCompareFunctionLess;
+		pipelineDescriptor.depthStencilDescriptor.frontFaceStencil.stencilCompareFunction = DKCompareFunction::DKCompareFunctionNever;
+		pipelineDescriptor.depthStencilDescriptor.backFaceStencil.stencilCompareFunction = DKCompareFunction::DKCompareFunctionNever;
 
 		DKPipelineReflection reflection;
 		DKObject<DKRenderPipelineState> pipelineState = device->CreateRenderPipeline(pipelineDescriptor, &reflection);
@@ -329,7 +335,7 @@ public:
         DKCamera camera;
         DKVector3 cameraPosition = { 0, 0, 10 };
         DKVector3 cameraTartget = { 0, 0, 0 };
-
+		
         DKAffineTransform3 tm(DKLinearTransform3().Scale(4));
 
         DKTimer timer;
@@ -363,7 +369,7 @@ public:
                 texDesc.mipmapLevels = 1;
                 texDesc.sampleCount = 1;
                 texDesc.arrayLength = 1;
-                texDesc.usage = DKTexture::UsageShaderWrite | DKTexture::UsageRenderTarget;
+                texDesc.usage = DKTexture::UsageRenderTarget;
                 depthBuffer = device->CreateTexture(texDesc);
             }
             rpd.depthStencilAttachment.renderTarget = depthBuffer;
