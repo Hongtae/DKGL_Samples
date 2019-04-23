@@ -243,15 +243,21 @@ public:
         indexBuffer->Flush();
 
 		DKRenderPipelineDescriptor pipelineDescriptor;
+        // setup shader
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
+        // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
         pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = false;
         pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
         pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
-		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float; // no depth buffer
-		pipelineDescriptor.vertexDescriptor.attributes = {
+        // setup depth-stencil
+		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float;
+        pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;
+        pipelineDescriptor.depthStencilDescriptor.depthCompareFunction = DKCompareFunctionLessEqual;
+        // setup vertex buffer and attributes
+        pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, offsetof(SampleObjMesh::Vertex, inPos), 0, 0 },
             { DKVertexFormat::Float3, offsetof(SampleObjMesh::Vertex, inColor), 0, 1 },
 			{ DKVertexFormat::Float2, offsetof(SampleObjMesh::Vertex, intexCoord), 0, 2 },
@@ -259,18 +265,13 @@ public:
 		pipelineDescriptor.vertexDescriptor.layouts = {
 			{ DKVertexStepRate::Vertex, sizeof(SampleObjMesh::Vertex), 0 },
 		};
+        // setup topology and rasterization
 		pipelineDescriptor.primitiveTopology = DKPrimitiveType::Triangle;
 		pipelineDescriptor.frontFace = DKFrontFace::CCW;
 		pipelineDescriptor.triangleFillMode = DKTriangleFillMode::Fill;
 		pipelineDescriptor.depthClipMode = DKDepthClipMode::Clip;
 		pipelineDescriptor.cullMode = DKCullMode::Back;
 		pipelineDescriptor.rasterizationEnabled = true;
-
-
-		pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;
-		pipelineDescriptor.depthStencilDescriptor.depthCompareFunction = DKCompareFunction::DKCompareFunctionLess;
-		pipelineDescriptor.depthStencilDescriptor.frontFaceStencil.stencilCompareFunction = DKCompareFunction::DKCompareFunctionNever;
-		pipelineDescriptor.depthStencilDescriptor.backFaceStencil.stencilCompareFunction = DKCompareFunction::DKCompareFunctionNever;
 
 		DKPipelineReflection reflection;
 		DKObject<DKRenderPipelineState> pipelineState = device->CreateRenderPipeline(pipelineDescriptor, &reflection);
@@ -333,10 +334,10 @@ public:
         DKObject<DKTexture> depthBuffer = nullptr;
 
         DKCamera camera;
-        DKVector3 cameraPosition = { 0, 0, 10 };
+        DKVector3 cameraPosition = { 0, 5, 10 };
         DKVector3 cameraTartget = { 0, 0, 0 };
 		
-        DKAffineTransform3 tm(DKLinearTransform3().Scale(4));
+        DKAffineTransform3 tm(DKLinearTransform3().Scale(5).Rotate(DKVector3(-1,0,0), DKGL_PI * 0.5));
 
         DKTimer timer;
 		timer.Reset();
