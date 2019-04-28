@@ -324,7 +324,7 @@ public:
                 //ubo.modelMatrix.Multiply(trans.Matrix4());
 
                 //memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
-                bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
+                bindSet->SetBuffer(0, uboBuffer, 0, sizeof(UBO));
             }
 			         
             bindSet->SetTexture(1, texture);
@@ -393,7 +393,7 @@ public:
                     DKAffineTransform3 trans = tm * DKAffineTransform3(quat);
                     ubo->modelMatrix = trans.Matrix4();
                     uboBuffer->Flush();
-                    bindSet->SetBuffer(0, uboBuffer, 0, sizeof(ubo));
+                    bindSet->SetBuffer(0, uboBuffer, 0, sizeof(UBO));
                 }
 
 				encoder->SetRenderPipelineState(pipelineState);
