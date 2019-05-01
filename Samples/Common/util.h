@@ -270,3 +270,16 @@ void PrintPipelineReflection(const DKPipelineReflection* reflection, DKLogCatego
     }
     DKLog(c, "=========================================================");
 }
+
+class GPUGeometry
+{
+protected:
+    DKObject<DKGpuBuffer> indexBuffer;
+    DKObject<DKGpuBuffer> vertexBuffer;
+    DKVertexDescriptor vertexDesc;
+public:
+    virtual void InitializeGpuResource(DKCommandQueue* queue) = 0;
+    virtual DKGpuBuffer* VertexBuffer()  final  { return vertexBuffer; }
+    virtual DKGpuBuffer* IndexBuffer()  final { return indexBuffer; }
+    virtual const DKVertexDescriptor& VertexDescriptor() const final { return vertexDesc; }
+};
