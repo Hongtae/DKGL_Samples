@@ -469,9 +469,9 @@ public:
                 if (computebindSet)
                 {
                     computebindSet->SetTexture(0, texture);
-                    computebindSet->SetSamplerState(0, sampler);
+                    //computebindSet->SetSamplerState(0, sampler);
                     computebindSet->SetTexture(1, targettex);
-                    computebindSet->SetSamplerState(1, sampler);
+                    //computebindSet->SetSamplerState(1, sampler);
                 }
                 computeEncoder->SetComputePipelineState(Emboss);
                 computeEncoder->SetResources(0, computebindSet);
@@ -498,8 +498,8 @@ public:
                     uboBuffer->Flush();
                     graphicShaderBindingSet->PostcomputeDescSet()->SetBuffer(0, uboBuffer, 0, sizeof(GraphicShaderBindingSet::UBO));
 
-                    graphicShaderBindingSet->PostcomputeDescSet()->SetTexture(0, targettex);
-                    graphicShaderBindingSet->PostcomputeDescSet()->SetSamplerState(0, sampler);
+                    graphicShaderBindingSet->PostcomputeDescSet()->SetTexture(1, targettex);
+                    graphicShaderBindingSet->PostcomputeDescSet()->SetSamplerState(1, sampler);
                 }
 
 				encoder->SetRenderPipelineState(pipelineState);
