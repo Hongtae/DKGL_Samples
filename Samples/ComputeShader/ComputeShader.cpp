@@ -13,10 +13,10 @@ private:
 
     DKArray<UVQuad::Vertex> vertices =
     {
-        { { 1.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } },
-        { { -1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } },
-        { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f } },
-        { { 1.0f, -1.0f, 0.0f }, { 1.0f, 0.0f } }
+        { { 1.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
+        { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } },
+        { { -1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f } },
+        { { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f } }
     };
 
     DKArray<uint32_t> indices = { 0,1,2,2,3,0 };
@@ -185,12 +185,6 @@ public:
                 descriptorSetPostCompute->SetBuffer(0, uniformBuffer, 0, sizeof(UBO));
             }
         }
-
-
-
-
-        //descriptorSetPreCompute->SetTexture(1, texture);
-        //descriptorSetPreCompute->SetSamplerState(1, sampler);
     }
 
     DKGpuBuffer* UniformBuffer() { return uniformBuffer; }
