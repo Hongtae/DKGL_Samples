@@ -75,7 +75,6 @@ public:
 
         if (textureTarget == nullptr)
         {
-            // create depth buffer
             DKTextureDescriptor texDesc = {};
             texDesc.textureType = DKTexture::Type2D;
             texDesc.pixelFormat = DKPixelFormat::BGRA8Unorm;
@@ -85,7 +84,8 @@ public:
             texDesc.mipmapLevels = 1;
             texDesc.sampleCount = 1;
             texDesc.arrayLength = 1;
-            texDesc.usage = DKTexture::UsageShaderRead | DKTexture::UsageStorage | DKTexture::UsageSampled;
+            texDesc.usage = DKTexture::UsageStorage  // For Compute Shader
+                | DKTexture::UsageSampled | DKTexture::UsageShaderRead;// For FragmentShader
             textureTarget = device->CreateTexture(texDesc);
         }
 
@@ -198,7 +198,7 @@ class MeshDemo : public SampleApp
 	DKAtomicNumber32 runningRenderThread;
 
     //Resource
-	DKObject<UVQuad> Quad;
+	DKObject<UVQuad> quad;
     DKObject<DKTexture> textureColorMap;
 
     DKObject<TextureComputeTarget> ComputeTarget;
@@ -265,7 +265,7 @@ public:
         DKObject<DKCommandQueue> computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
 
         // Geometry Initialzie
-        Quad->InitializeGpuResource(graphicsQueue);
+        quad->InitializeGpuResource(graphicsQueue);
 
         // create shaders
 		DKObject<DKData> vertData = resourcePool.LoadResourceData("shaders/ComputeShader/texture.vert.spv");
@@ -275,27 +275,25 @@ public:
         DKObject<DKData> sharpenData = resourcePool.LoadResourceData("shaders/ComputeShader/sharpen.comp.spv");
 
 
-        DKObject<GPUShader> VS = DKOBJECT_NEW GPUShader(vertData);
-        DKObject<GPUShader> FS = DKOBJECT_NEW GPUShader(fragData);
+        DKObject<GPUShader> vs = DKOBJECT_NEW GPUShader(vertData);
+        DKObject<GPUShader> fs = DKOBJECT_NEW GPUShader(fragData);
 
-        DKObject<GPUShader> CS_E = DKOBJECT_NEW GPUShader(embossData);
-        DKObject<GPUShader> CS_ED = DKOBJECT_NEW GPUShader(edgedetectData);
-        DKObject<GPUShader> CS_SH = DKOBJECT_NEW GPUShader(sharpenData);
+        DKObject<GPUShader> cs_e = DKOBJECT_NEW GPUShader(embossData);
+        DKObject<GPUShader> cs_ed = DKOBJECT_NEW GPUShader(edgedetectData);
+        DKObject<GPUShader> cs_sh = DKOBJECT_NEW GPUShader(sharpenData);
 
-        VS->InitializeGpuResource(graphicsQueue);
-        FS->InitializeGpuResource(graphicsQueue);
+        vs->InitializeGpuResource(graphicsQueue);
+        fs->InitializeGpuResource(graphicsQueue);
 
-        CS_E->InitializeGpuResource(computeQueue);
-        CS_ED->InitializeGpuResource(computeQueue);
-        CS_SH->InitializeGpuResource(computeQueue);
+        cs_e->InitializeGpuResource(computeQueue);
+        cs_ed->InitializeGpuResource(computeQueue);
+        cs_sh->InitializeGpuResource(computeQueue);
 
-        auto VSF = VS->Function();
-        auto FSF = FS->Function();
-        auto CS_EF = CS_E->Function();
-        auto CS_EDF = CS_ED->Function();
-        auto CS_SHF = CS_SH->Function();
-
-
+        auto vsf = vs->Function();
+        auto fsf = fs->Function();
+        auto cs_ef = cs_e->Function();
+        auto cs_edf = cs_ed->Function();
+        auto cs_shf = cs_sh->Function();
 
         // Texture Resource Initialize
         
@@ -312,8 +310,7 @@ public:
         computeSamplerDesc.compareFunction = DKCompareFunctionNever;
         DKObject<DKSamplerState> computeSampler = device->CreateSamplerState(computeSamplerDesc);
 
-
-		// create texture
+        // create texture
 		DKObject<DKTexture> texture = LoadTexture2D(graphicsQueue, resourcePool.LoadResourceData("textures/deathstar3.png"));
 		
         // create sampler
@@ -329,18 +326,18 @@ public:
 		
 		DKObject<DKSwapChain> swapChain = graphicsQueue->CreateSwapChain(window);
 
-		DKLog("VertexFunction.VertexAttributes: %d", VSF->StageInputAttributes().Count());
-		for (int i = 0; i < VSF->StageInputAttributes().Count(); ++i)
+		DKLog("VertexFunction.VertexAttributes: %d", vsf->StageInputAttributes().Count());
+		for (int i = 0; i < vsf->StageInputAttributes().Count(); ++i)
 		{
-			const DKShaderAttribute& attr = VSF->StageInputAttributes().Value(i);
+			const DKShaderAttribute& attr = vsf->StageInputAttributes().Value(i);
 			DKLog("  --> VertexAttribute[%d]: \"%ls\" (location:%u)", i, (const wchar_t*)attr.name, attr.location);
 		}
 
 		
 		DKRenderPipelineDescriptor pipelineDescriptor;
         // setup shader
-        pipelineDescriptor.vertexFunction = VSF;
-		pipelineDescriptor.fragmentFunction = FSF;
+        pipelineDescriptor.vertexFunction = vsf;
+		pipelineDescriptor.fragmentFunction = fsf;
         
         // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
@@ -354,7 +351,7 @@ public:
         pipelineDescriptor.depthStencilDescriptor.depthCompareFunction = DKCompareFunctionLessEqual;
    
         // setup vertex buffer and attributes
-        pipelineDescriptor.vertexDescriptor = Quad->VertexDescriptor();
+        pipelineDescriptor.vertexDescriptor = quad->VertexDescriptor();
 
         // setup topology and rasterization
 		pipelineDescriptor.primitiveTopology = DKPrimitiveType::Triangle;
@@ -403,7 +400,7 @@ public:
         //auto CS_SHF = CS_SH->Function();
 
         DKComputePipelineDescriptor embossComputePipelineDescriptor;
-        embossComputePipelineDescriptor.computeFunction = CS_EF;
+        embossComputePipelineDescriptor.computeFunction = cs_ef;
         auto Emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
         
         DKObject<DKTexture> depthBuffer = nullptr;
@@ -456,9 +453,7 @@ public:
                 if (computebindSet)
                 {
                     computebindSet->SetTexture(0, texture);
-                    //computebindSet->SetSamplerState(0, sampler);
                     computebindSet->SetTexture(1, targettex);
-                    //computebindSet->SetSamplerState(1, sampler);
                 }
                 computeEncoder->SetComputePipelineState(Emboss);
                 computeEncoder->SetResources(0, computebindSet);
@@ -479,11 +474,11 @@ public:
                 }
 
 				encoder->SetRenderPipelineState(pipelineState);
-				encoder->SetVertexBuffer(Quad->VertexBuffer(), 0, 0);
-				encoder->SetIndexBuffer(Quad->IndexBuffer(), 0, DKIndexType::UInt32);
+				encoder->SetVertexBuffer(quad->VertexBuffer(), 0, 0);
+				encoder->SetIndexBuffer(quad->IndexBuffer(), 0, DKIndexType::UInt32);
                 encoder->SetResources(0, graphicShaderBindingSet->PostcomputeDescSet());
 				// draw scene!
-				encoder->DrawIndexed(Quad->IndicesCount(), 1, 0, 0, 0);
+				encoder->DrawIndexed(quad->IndicesCount(), 1, 0, 0, 0);
                 encoder->EndEncoding();
 
                 if (computeCmdbuffer)
@@ -518,7 +513,7 @@ public:
                 DKApplication::Instance()->Terminate(0);
         }), NULL, NULL);
 
-        Quad = DKOBJECT_NEW UVQuad();
+        quad = DKOBJECT_NEW UVQuad();
 
 		runningRenderThread = 1;
 		renderThread = DKThread::Create(DKFunction(this, &MeshDemo::RenderThread)->Invocation());
