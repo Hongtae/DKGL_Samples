@@ -39,6 +39,5 @@ void main()
 	kernel[6] = 0.0; kernel[7] =  0.0; kernel[8] = 2.0;
 									
 	vec4 res = vec4(vec3(conv(kernel, imageData.avg, 1.0, 0.50)), 1.0);
-
-	imageStore(resultImage, ivec2(gl_GlobalInvocationID.xy), res);
+    imageStore(resultImage, ivec2(gl_GlobalInvocationID.xy), res);
 }

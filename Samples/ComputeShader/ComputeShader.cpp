@@ -46,7 +46,7 @@ public:
         // setup vertex buffer and attributes
         vertexDesc.attributes = {
             { DKVertexFormat::Float3, offsetof(UVQuad::Vertex, Pos), 0, 0 },
-            { DKVertexFormat::Float2, offsetof(UVQuad::Vertex, UV), 0, 2 },
+            { DKVertexFormat::Float2, offsetof(UVQuad::Vertex, UV), 0, 1 },
         };
         vertexDesc.layouts = {
             { DKVertexStepRate::Vertex, sizeof(UVQuad::Vertex), 0 },
@@ -85,7 +85,7 @@ public:
             texDesc.mipmapLevels = 1;
             texDesc.sampleCount = 1;
             texDesc.arrayLength = 1;
-            texDesc.usage = DKTexture::UsageShaderRead | DKTexture::UsageShaderWrite;
+            texDesc.usage = DKTexture::UsageShaderRead | DKTexture::UsageShaderWrite | DKTexture::UsageSampled;
             textureTarget = device->CreateTexture(texDesc);
         }
 
@@ -125,7 +125,6 @@ public:
     {
         DKMatrix4 projectionMatrix;
         DKMatrix4 modelMatrix;
-        DKMatrix4 viewMatrix;
     };
 private:
     DKShaderBindingSetLayout descriptorSetLayout;
@@ -173,7 +172,6 @@ public:
                 ubo = reinterpret_cast<UBO*>(uniformBuffer->Contents());
                 ubo->projectionMatrix = DKMatrix4::identity;
                 ubo->modelMatrix = DKMatrix4::identity;
-                ubo->viewMatrix = DKMatrix4::identity;
                 uniformBuffer->Flush();
 
                 descriptorSetPreCompute->SetBuffer(0, uniformBuffer, 0, sizeof(UBO));
@@ -272,6 +270,9 @@ public:
         DKObject<DKCommandQueue> graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics);
         DKObject<DKCommandQueue> computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
 
+        // Geometry Initialzie
+        Quad->InitializeGpuResource(graphicsQueue);
+
         // create shaders
 		DKObject<DKData> vertData = resourcePool.LoadResourceData("shaders/ComputeShader/texture.vert.spv");
 		DKObject<DKData> fragData = resourcePool.LoadResourceData("shaders/ComputeShader/texture.frag.spv");
@@ -300,8 +301,7 @@ public:
         auto CS_EDF = CS_ED->Function();
         auto CS_SHF = CS_SH->Function();
 
-        // Geometry Initialzie
-        Quad->InitializeGpuResource(graphicsQueue);
+
 
         // Texture Resource Initialize
         
@@ -412,15 +412,8 @@ public:
         embossComputePipelineDescriptor.computeFunction = CS_EF;
         auto Emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
         
-        
         DKObject<DKTexture> depthBuffer = nullptr;
         DKObject<DKTexture> targettex = nullptr;
-
-        DKCamera camera;
-        DKVector3 cameraPosition = { 0, 5, 10 };
-        DKVector3 cameraTartget = { 0, 0, 0 };
-		
-        DKAffineTransform3 tm(DKLinearTransform3().Scale(5).Rotate(DKVector3(-1,0,0), DKGL_PI * 0.5));
 
         DKTimer timer;
 		timer.Reset();
@@ -486,18 +479,7 @@ public:
 			{
                 if (graphicShaderBindingSet->PostcomputeDescSet() && ubo)
                 {
-                    camera.SetView(cameraPosition, cameraTartget - cameraPosition, DKVector3(0, 1, 0));
-                    camera.SetPerspective(DKGL_DEGREE_TO_RADIAN(90), float(width)/float(height), 1, 1000);
-
-                    ubo->projectionMatrix = camera.ProjectionMatrix();
-                    ubo->viewMatrix = camera.ViewMatrix();
-
-                    DKQuaternion quat(DKVector3(0, 1, 0), t);
-                    DKAffineTransform3 trans = tm * DKAffineTransform3(quat);
-                    ubo->modelMatrix = trans.Matrix4();
-                    uboBuffer->Flush();
                     graphicShaderBindingSet->PostcomputeDescSet()->SetBuffer(0, uboBuffer, 0, sizeof(GraphicShaderBindingSet::UBO));
-
                     graphicShaderBindingSet->PostcomputeDescSet()->SetTexture(1, targettex);
                     graphicShaderBindingSet->PostcomputeDescSet()->SetSamplerState(1, sampler);
                 }
