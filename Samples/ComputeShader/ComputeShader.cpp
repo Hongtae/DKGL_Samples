@@ -228,7 +228,7 @@ public:
             texDesc.mipmapLevels = 1;
             texDesc.sampleCount = 1;
             texDesc.arrayLength = 1;
-            texDesc.usage = DKTexture::UsageCopyDestination | DKTexture::UsageSampled;
+            texDesc.usage = DKTexture::UsageStorage | DKTexture::UsageShaderRead | DKTexture::UsageCopyDestination | DKTexture::UsageSampled;
             DKObject<DKTexture> tex = device->CreateTexture(texDesc);
             if (tex)
             {
