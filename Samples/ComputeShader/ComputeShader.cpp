@@ -85,7 +85,7 @@ public:
             texDesc.mipmapLevels = 1;
             texDesc.sampleCount = 1;
             texDesc.arrayLength = 1;
-            texDesc.usage = DKTexture::UsageShaderRead | DKTexture::UsageShaderWrite | DKTexture::UsageSampled;
+            texDesc.usage = DKTexture::UsageShaderRead | DKTexture::UsageStorage | DKTexture::UsageSampled;
             textureTarget = device->CreateTexture(texDesc);
         }
 
