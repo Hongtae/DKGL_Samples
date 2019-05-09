@@ -191,7 +191,7 @@ public:
     UBO* UniformBufferO() { return ubo; }
 };
 
-class MeshDemo : public SampleApp
+class ComputeShaderDemo : public SampleApp
 {
     DKObject<DKWindow> window;
 	DKObject<DKThread> renderThread;
@@ -201,7 +201,7 @@ class MeshDemo : public SampleApp
 	DKObject<UVQuad> quad;
     DKObject<DKTexture> textureColorMap;
 
-    DKObject<TextureComputeTarget> ComputeTarget;
+    DKObject<TextureComputeTarget> computeTarget;
     DKObject<DKSamplerState> sampleState = nullptr;;
 
     DKObject<GraphicShaderBindingSet> graphicShaderBindingSet = nullptr;
@@ -297,7 +297,7 @@ public:
 
         // Texture Resource Initialize
         
-        ComputeTarget = DKOBJECT_NEW TextureComputeTarget();
+        computeTarget = DKOBJECT_NEW TextureComputeTarget();
         
         DKSamplerDescriptor computeSamplerDesc = {};
         computeSamplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
@@ -401,7 +401,7 @@ public:
 
         DKComputePipelineDescriptor embossComputePipelineDescriptor;
         embossComputePipelineDescriptor.computeFunction = cs_ef;
-        auto Emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
+        auto emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
         
         DKObject<DKTexture> depthBuffer = nullptr;
         DKObject<DKTexture> targettex = nullptr;
@@ -444,7 +444,7 @@ public:
             rpd.depthStencilAttachment.loadAction = DKRenderPassAttachmentDescriptor::LoadActionClear;
             rpd.depthStencilAttachment.storeAction = DKRenderPassAttachmentDescriptor::StoreActionDontCare;
 
-            targettex = ComputeTarget->ComputeTarget(computeQueue, width, height);
+            targettex = computeTarget->ComputeTarget(computeQueue, width, height);
 
             DKObject<DKCommandBuffer> computeCmdbuffer = computeQueue->CreateCommandBuffer();
             DKObject<DKComputeCommandEncoder> computeEncoder = computeCmdbuffer->CreateComputeCommandEncoder();
@@ -455,7 +455,7 @@ public:
                     computebindSet->SetTexture(0, texture);
                     computebindSet->SetTexture(1, targettex);
                 }
-                computeEncoder->SetComputePipelineState(Emboss);
+                computeEncoder->SetComputePipelineState(emboss);
                 computeEncoder->SetResources(0, computebindSet);
                 computeEncoder->Dispatch(width / 16, height / 16, 1);
                 computeEncoder->EndEncoding();
@@ -516,7 +516,7 @@ public:
         quad = DKOBJECT_NEW UVQuad();
 
 		runningRenderThread = 1;
-		renderThread = DKThread::Create(DKFunction(this, &MeshDemo::RenderThread)->Invocation());
+		renderThread = DKThread::Create(DKFunction(this, &ComputeShaderDemo::RenderThread)->Invocation());
 	}
 	void OnTerminate(void) override
 	{
@@ -541,7 +541,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 int main(int argc, const char * argv[])
 #endif
 {
-    MeshDemo app;
+    ComputeShaderDemo app;
 	DKPropertySet::SystemConfig().SetValue("AppDelegate", "AppDelegate");
 	DKPropertySet::SystemConfig().SetValue("GraphicsAPI", "Vulkan");
 	return app.Run();
