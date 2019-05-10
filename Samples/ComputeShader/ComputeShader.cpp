@@ -13,10 +13,10 @@ private:
 
     DKArray<UVQuad::Vertex> vertices =
     {
-        { { 1.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
-        { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } },
+        { {  1.0f,  1.0f, 0.0f }, { 1.0f, 0.0f } },
+        { { -1.0f,  1.0f, 0.0f }, { 0.0f, 0.0f } },
         { { -1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f } },
-        { { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f } }
+        { {  1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f } }
     };
 
     DKArray<uint32_t> indices = { 0,1,2,2,3,0 };
@@ -54,45 +54,6 @@ public:
     }
 };
 
-class TextureComputeTarget
-{
-private:
-    DKObject<DKTexture> textureTarget = nullptr;
-
-public:
-    TextureComputeTarget() = default;
-
-    DKTexture* ComputeTarget(DKCommandQueue* queue, int w, int h)
-    {
-        auto device = queue->Device();
-
-        if (textureTarget)
-        {
-            if (textureTarget->Width() != w ||
-                textureTarget->Height() != h)
-                textureTarget = nullptr;
-        }
-
-        if (textureTarget == nullptr)
-        {
-            DKTextureDescriptor texDesc = {};
-            texDesc.textureType = DKTexture::Type2D;
-            texDesc.pixelFormat = DKPixelFormat::BGRA8Unorm;
-            texDesc.width = w;
-            texDesc.height = h;
-            texDesc.depth = 1;
-            texDesc.mipmapLevels = 1;
-            texDesc.sampleCount = 1;
-            texDesc.arrayLength = 1;
-            texDesc.usage = DKTexture::UsageStorage  // For Compute Shader
-                | DKTexture::UsageSampled | DKTexture::UsageShaderRead;// For FragmentShader
-            textureTarget = device->CreateTexture(texDesc);
-        }
-
-        return textureTarget;
-    }
-};
-
 class GPUShader
 {
 private:
@@ -100,7 +61,10 @@ private:
     DKObject<DKShaderModule> shaderModule = nullptr;
     DKObject<DKShaderFunction> shaderFunc = nullptr;
 public:
-    GPUShader(DKData* data) : shaderData(data)
+
+    struct { uint32_t x, y, z; } threadgroupSize;
+
+    GPUShader(DKData* data) : shaderData(data), threadgroupSize{1,1,1}
     {
     }
 
@@ -112,6 +76,12 @@ public:
             DKShader shader(shaderData);
             shaderModule = device->CreateShaderModule(&shader);
             shaderFunc = shaderModule->CreateFunction(shaderModule->FunctionNames().Value(0));
+            if (shaderFunc)
+            {
+                threadgroupSize = { shader.ThreadgroupSize().x,
+                                    shader.ThreadgroupSize().y,
+                                    shader.ThreadgroupSize().z };
+            }
         }
     }
 
@@ -201,7 +171,6 @@ class ComputeShaderDemo : public SampleApp
 	DKObject<UVQuad> quad;
     DKObject<DKTexture> textureColorMap;
 
-    DKObject<TextureComputeTarget> computeTarget;
     DKObject<DKSamplerState> sampleState = nullptr;;
 
     DKObject<GraphicShaderBindingSet> graphicShaderBindingSet = nullptr;
@@ -261,8 +230,9 @@ public:
     {
         // Device and Queue Preperation
         DKObject<DKGraphicsDevice> device = DKGraphicsDevice::SharedInstance();
-        DKObject<DKCommandQueue> graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics);
-        DKObject<DKCommandQueue> computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
+        DKObject<DKCommandQueue> graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics| DKCommandQueue::Compute);
+        //DKObject<DKCommandQueue> computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
+        DKObject<DKCommandQueue> computeQueue = graphicsQueue;
 
         // Geometry Initialzie
         quad->InitializeGpuResource(graphicsQueue);
@@ -296,24 +266,23 @@ public:
         auto cs_shf = cs_sh->Function();
 
         // Texture Resource Initialize
-        
-        computeTarget = DKOBJECT_NEW TextureComputeTarget();
-        
-        DKSamplerDescriptor computeSamplerDesc = {};
-        computeSamplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
-        computeSamplerDesc.minFilter = DKSamplerDescriptor::MinMagFilterLinear;
-        computeSamplerDesc.mipFilter = DKSamplerDescriptor::MipFilterLinear;
-        computeSamplerDesc.addressModeU = DKSamplerDescriptor::AddressModeClampToEdge;
-        computeSamplerDesc.addressModeV = DKSamplerDescriptor::AddressModeClampToEdge;
-        computeSamplerDesc.addressModeW = DKSamplerDescriptor::AddressModeClampToEdge;
-        computeSamplerDesc.maxAnisotropy = 1.0f;
-        computeSamplerDesc.compareFunction = DKCompareFunctionNever;
-        DKObject<DKSamplerState> computeSampler = device->CreateSamplerState(computeSamplerDesc);
-
-        // create texture
-		DKObject<DKTexture> texture = LoadTexture2D(graphicsQueue, resourcePool.LoadResourceData("textures/deathstar3.png"));
+		DKObject<DKTexture> sourceTexture = LoadTexture2D(graphicsQueue, resourcePool.LoadResourceData("textures/Vulkan_1024.png"));
+        DKObject<DKTexture> targetTexture = [](DKGraphicsDevice* device, int width, int height) {
+            DKTextureDescriptor texDesc = {};
+            texDesc.textureType = DKTexture::Type2D;
+            texDesc.pixelFormat = DKPixelFormat::BGRA8Unorm;
+            texDesc.width = width;
+            texDesc.height = height;
+            texDesc.depth = 1;
+            texDesc.mipmapLevels = 1;
+            texDesc.sampleCount = 1;
+            texDesc.arrayLength = 1;
+            texDesc.usage = DKTexture::UsageStorage |   // For Compute Shader
+                            DKTexture::UsageSampled;    // For FragmentShader
+            return device->CreateTexture(texDesc);
+        }(graphicsQueue->Device(), sourceTexture->Width(), sourceTexture->Height());
 		
-        // create sampler
+        // create sampler for fragment-shader
 		DKSamplerDescriptor samplerDesc = {};
 		samplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
 		samplerDesc.minFilter = DKSamplerDescriptor::MinMagFilterLinear;
@@ -401,11 +370,10 @@ public:
 
         DKComputePipelineDescriptor embossComputePipelineDescriptor;
         embossComputePipelineDescriptor.computeFunction = cs_ef;
-        auto emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
+        DKObject<DKComputePipelineState> emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
         
         DKObject<DKTexture> depthBuffer = nullptr;
-        DKObject<DKTexture> targettex = nullptr;
-
+      
         DKTimer timer;
 		timer.Reset();
 
@@ -444,20 +412,20 @@ public:
             rpd.depthStencilAttachment.loadAction = DKRenderPassAttachmentDescriptor::LoadActionClear;
             rpd.depthStencilAttachment.storeAction = DKRenderPassAttachmentDescriptor::StoreActionDontCare;
 
-            targettex = computeTarget->ComputeTarget(computeQueue, width, height);
-
             DKObject<DKCommandBuffer> computeCmdbuffer = computeQueue->CreateCommandBuffer();
             DKObject<DKComputeCommandEncoder> computeEncoder = computeCmdbuffer->CreateComputeCommandEncoder();
             if (computeEncoder)
             {
                 if (computebindSet)
                 {
-                    computebindSet->SetTexture(0, texture);
-                    computebindSet->SetTexture(1, targettex);
+                    computebindSet->SetTexture(0, sourceTexture);
+                    computebindSet->SetTexture(1, targetTexture);
                 }
                 computeEncoder->SetComputePipelineState(emboss);
                 computeEncoder->SetResources(0, computebindSet);
-                computeEncoder->Dispatch(width / 16, height / 16, 1);
+                computeEncoder->Dispatch(targetTexture->Width() / cs_e->threadgroupSize.x,
+                                         targetTexture->Height() / cs_e->threadgroupSize.y,
+                                         1);
                 computeEncoder->EndEncoding();
             }
 
@@ -469,7 +437,7 @@ public:
                 if (graphicShaderBindingSet->PostcomputeDescSet() && ubo)
                 {
                     graphicShaderBindingSet->PostcomputeDescSet()->SetBuffer(0, uboBuffer, 0, sizeof(GraphicShaderBindingSet::UBO));
-                    graphicShaderBindingSet->PostcomputeDescSet()->SetTexture(1, targettex);
+                    graphicShaderBindingSet->PostcomputeDescSet()->SetTexture(1, targetTexture);
                     graphicShaderBindingSet->PostcomputeDescSet()->SetSamplerState(1, sampler);
                 }
 
@@ -504,7 +472,7 @@ public:
         // create window
         window = DKWindow::Create("DefaultWindow");
         window->SetOrigin({ 0, 0 });
-        window->Resize({ 320, 240 });
+        window->Resize({ 512, 512 });
         window->Activate();
 
         window->AddEventHandler(this, DKFunction([this](const DKWindow::WindowEvent& e)
