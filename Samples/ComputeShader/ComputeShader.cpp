@@ -230,9 +230,21 @@ public:
     {
         // Device and Queue Preperation
         DKObject<DKGraphicsDevice> device = DKGraphicsDevice::SharedInstance();
-        DKObject<DKCommandQueue> graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics| DKCommandQueue::Compute);
-        //DKObject<DKCommandQueue> computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
-        DKObject<DKCommandQueue> computeQueue = graphicsQueue;
+
+        DKObject<DKCommandQueue> graphicsQueue;
+        DKObject<DKCommandQueue> computeQueue;
+
+        bool useSingleQueue = false;
+        if (useSingleQueue)
+        {
+            graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics | DKCommandQueue::Compute);
+            computeQueue = graphicsQueue;
+        }
+        else
+        {
+            graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics);
+            computeQueue = device->CreateCommandQueue(DKCommandQueue::Compute);
+        }
 
         // Geometry Initialzie
         quad->InitializeGpuResource(graphicsQueue);
