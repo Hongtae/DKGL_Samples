@@ -234,7 +234,9 @@ public:
         DKObject<DKCommandQueue> graphicsQueue;
         DKObject<DKCommandQueue> computeQueue;
 
-        bool useSingleQueue = false;
+        bool useSingleQueue = true;
+        bool useSingleCommandBuffer = true;
+
         if (useSingleQueue)
         {
             graphicsQueue = device->CreateCommandQueue(DKCommandQueue::Graphics | DKCommandQueue::Compute);
@@ -424,8 +426,26 @@ public:
             rpd.depthStencilAttachment.loadAction = DKRenderPassAttachmentDescriptor::LoadActionClear;
             rpd.depthStencilAttachment.storeAction = DKRenderPassAttachmentDescriptor::StoreActionDontCare;
 
-            DKObject<DKCommandBuffer> computeCmdbuffer = computeQueue->CreateCommandBuffer();
-            DKObject<DKComputeCommandEncoder> computeEncoder = computeCmdbuffer->CreateComputeCommandEncoder();
+            
+            DKObject<DKComputeCommandEncoder> computeEncoder = nullptr;
+            DKObject<DKRenderCommandEncoder> renderEncoder = nullptr;
+
+            if (1)
+            {
+                auto commandBuffer = computeQueue->CreateCommandBuffer();
+                computeEncoder = commandBuffer->CreateComputeCommandEncoder();
+            }
+            if (1)
+            {
+                DKObject<DKCommandBuffer> commandBuffer = nullptr;
+                if (computeQueue == graphicsQueue && useSingleCommandBuffer)
+                    commandBuffer = computeEncoder->CommandBuffer();
+                else
+                    commandBuffer = graphicsQueue->CreateCommandBuffer();
+
+                renderEncoder = commandBuffer->CreateRenderCommandEncoder(rpd);
+            }
+
             if (computeEncoder)
             {
                 if (computebindSet)
@@ -441,10 +461,7 @@ public:
                 computeEncoder->EndEncoding();
             }
 
-			DKObject<DKCommandBuffer> buffer = graphicsQueue->CreateCommandBuffer();
-			DKObject<DKRenderCommandEncoder> encoder = buffer->CreateRenderCommandEncoder(rpd);
-
-			if (encoder)
+			if (renderEncoder)
 			{
                 if (graphicShaderBindingSet->PostcomputeDescSet() && ubo)
                 {
@@ -453,18 +470,18 @@ public:
                     graphicShaderBindingSet->PostcomputeDescSet()->SetSamplerState(1, sampler);
                 }
 
-				encoder->SetRenderPipelineState(pipelineState);
-				encoder->SetVertexBuffer(quad->VertexBuffer(), 0, 0);
-				encoder->SetIndexBuffer(quad->IndexBuffer(), 0, DKIndexType::UInt32);
-                encoder->SetResources(0, graphicShaderBindingSet->PostcomputeDescSet());
+				renderEncoder->SetRenderPipelineState(pipelineState);
+				renderEncoder->SetVertexBuffer(quad->VertexBuffer(), 0, 0);
+				renderEncoder->SetIndexBuffer(quad->IndexBuffer(), 0, DKIndexType::UInt32);
+                renderEncoder->SetResources(0, graphicShaderBindingSet->PostcomputeDescSet());
 				// draw scene!
-				encoder->DrawIndexed(quad->IndicesCount(), 1, 0, 0, 0);
-                encoder->EndEncoding();
+				renderEncoder->DrawIndexed(quad->IndicesCount(), 1, 0, 0, 0);
+                renderEncoder->EndEncoding();
 
-                if (computeCmdbuffer)
-                    computeCmdbuffer->Commit();
+                if (computeEncoder->CommandBuffer() != renderEncoder->CommandBuffer())
+                    computeEncoder->CommandBuffer()->Commit();
 
-				buffer->Commit();
+                renderEncoder->CommandBuffer()->Commit();
 
 				swapChain->Present();
 			}
