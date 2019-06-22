@@ -280,7 +280,7 @@ public:
         auto cs_shf = cs_sh->Function();
 
         // Texture Resource Initialize
-		DKObject<DKTexture> sourceTexture = LoadTexture2D(graphicsQueue, resourcePool.LoadResourceData("textures/Vulkan_1024.png"));
+		DKObject<DKTexture> sourceTexture = LoadTexture2D(graphicsQueue, resourcePool.LoadResourceData("textures/Vulkan.png"));
         DKObject<DKTexture> targetTexture = [](DKGraphicsDevice* device, int width, int height) {
             DKTextureDescriptor texDesc = {};
             texDesc.textureType = DKTexture::Type2D;
