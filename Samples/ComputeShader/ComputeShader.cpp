@@ -317,7 +317,7 @@ public:
 		}
 
 		
-		DKRenderPipelineDescriptor pipelineDescriptor;
+        DKRenderPipelineDescriptor pipelineDescriptor = {};
         // setup shader
         pipelineDescriptor.vertexFunction = vsf;
 		pipelineDescriptor.fragmentFunction = fsf;
@@ -382,7 +382,7 @@ public:
         //auto CS_EDF = CS_ED->Function();
         //auto CS_SHF = CS_SH->Function();
 
-        DKComputePipelineDescriptor embossComputePipelineDescriptor;
+        DKComputePipelineDescriptor embossComputePipelineDescriptor = {};
         embossComputePipelineDescriptor.computeFunction = cs_ef;
         DKObject<DKComputePipelineState> emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
         
