@@ -37,7 +37,7 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DKGL2\DK\DK_static.vcxproj">
+    <ProjectReference Include="..\..\dk\DK_static.vcxproj">
       <Project>{c7312831-a3f6-4e7d-962b-6786972f0a6a}</Project>
     </ProjectReference>
   </ItemGroup>
