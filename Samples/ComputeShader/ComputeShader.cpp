@@ -325,9 +325,9 @@ public:
         // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
-        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = false;
-        pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
-        pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = false;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
         // setup depth-stencil
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float;
         pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;

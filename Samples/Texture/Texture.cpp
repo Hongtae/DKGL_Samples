@@ -96,7 +96,7 @@ public:
 		};
 		uint32_t vertexBufferSize = static_cast<uint32_t>(vertexData.Count()) * sizeof(Vertex);
         DKArray<uint32_t> indexData = { 0, 1, 2, 2, 3, 0 };
-		uint32_t indexBufferSize = indexData.Count() * sizeof(uint32_t);
+		uint32_t indexBufferSize = static_cast<uint32_t>(indexData.Count()) * sizeof(uint32_t);
 
 		DKObject<DKGpuBuffer> vertexBuffer = device->CreateBuffer(vertexBufferSize, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
 		memcpy(vertexBuffer->Contents(), vertexData, vertexBufferSize);
@@ -106,14 +106,14 @@ public:
 		memcpy(indexBuffer->Contents(), indexData, indexBufferSize);
         indexBuffer->Flush();
 
-		DKRenderPipelineDescriptor pipelineDescriptor;
+        DKRenderPipelineDescriptor pipelineDescriptor = {};
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
-        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = true;
-        pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
-        pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = true;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, 0, 0, 0 },
