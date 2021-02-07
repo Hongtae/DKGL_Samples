@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{b5dc83ca-43a3-419d-ad59-977da7f4e408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e5e3c3a7-54d9-4bd7-bb17-507ba17c21ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Win32">
+      <UniqueIdentifier>{1e5cf7df-b5b9-4e2b-b747-f1a2d7810117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{3ce1a1e3-391f-40d9-97b3-2d6763792f5f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\Win32\Resource.h">
+      <Filter>Common\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Win32\stdafx.h">
+      <Filter>Common\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Win32\targetver.h">
+      <Filter>Common\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\app.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\tinyobjLoader\tiny_obj_loader.h">
+      <Filter>Libs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Common\Win32\SampleApp.ico">
+      <Filter>Common\Win32</Filter>
+    </Image>
+    <Image Include="..\Common\Win32\small.ico">
+      <Filter>Common\Win32</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Win32\SampleApp.rc">
+      <Filter>Common\Win32</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Common\dkgl_new.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\tinyobjLoader\tiny_obj_loader.cc">
+      <Filter>Libs</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

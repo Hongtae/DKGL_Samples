@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mesh", "Samples\Mesh\Mesh.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeShader", "Samples\ComputeShader\ComputeShader.vcxproj", "{2EFDB5BA-86ED-4C3A-8473-9CF51719FD82}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Material", "Samples\Material\Material.vcxproj", "{50D32CD3-7F2E-408D-A94B-E856A72D94FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{2EFDB5BA-86ED-4C3A-8473-9CF51719FD82}.Release|x64.Build.0 = Release|x64
 		{2EFDB5BA-86ED-4C3A-8473-9CF51719FD82}.Release|x86.ActiveCfg = Release|Win32
 		{2EFDB5BA-86ED-4C3A-8473-9CF51719FD82}.Release|x86.Build.0 = Release|Win32
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Debug|x64.ActiveCfg = Debug|x64
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Debug|x64.Build.0 = Debug|x64
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Debug|x86.ActiveCfg = Debug|Win32
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Debug|x86.Build.0 = Debug|Win32
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Release|x64.ActiveCfg = Release|x64
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Release|x64.Build.0 = Release|x64
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Release|x86.ActiveCfg = Release|Win32
+		{50D32CD3-7F2E-408D-A94B-E856A72D94FF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

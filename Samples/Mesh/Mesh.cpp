@@ -2,9 +2,7 @@
 #include "app.h"
 #include "util.h"
 
-#define TINYOBJLOADER_IMPLMENTATION
 #include "tiny_obj_loader.h"
-#include <unordered_map>
 
 
 class SampleObjMesh
