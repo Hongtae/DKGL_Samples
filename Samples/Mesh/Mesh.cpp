@@ -49,7 +49,7 @@ public:
 		}
 	};
 
-	SampleObjMesh() 
+	SampleObjMesh()
 	{
 		vertices.Reserve(100);
 		indices.Reserve(100);
@@ -64,7 +64,7 @@ public:
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, InPath)) {
 			throw std::runtime_error(err);
 		}
-		
+
 		DKMap<Vertex, uint32_t> uniqueVertices;
 		DKLog("Save to Container");
 		for (const auto& shape : shapes)
@@ -85,7 +85,7 @@ public:
 					attrib.texcoords[2 * index.texcoord_index + 0],
 					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
 					};
-				}				
+				}
 
 				vertex.inColor = { 1.0f, 1.0f, 1.0f };
 
@@ -102,13 +102,13 @@ public:
 		}
 	}
 
-	uint32_t GetVerticesCount() const { 
+	uint32_t GetVerticesCount() const {
 		return static_cast<uint32_t>(vertices.Count()); };
-	uint32_t GetIndicesCount() const { 
+	uint32_t GetIndicesCount() const {
 		return static_cast<uint32_t>(indices.Count()); };
-	const Vertex* GetVerticesData() const { 
+	const Vertex* GetVerticesData() const {
 		return vertices; }
-	const uint32_t* GetIndicesData() const { 
+	const uint32_t* GetIndicesData() const {
 		return indices; }
 
     DKAabb aabb;
@@ -138,7 +138,7 @@ class MeshDemo : public SampleApp
 public:
 	void LoadMesh()
 	{
-		
+
 		DKLog("Loading Mesh");
         DKString path = resourcePool.ResourceFilePath("meshes/chalet.obj");
 		SampleMesh->LoadFromObjFile(DKStringU8(path));
@@ -171,7 +171,7 @@ public:
 
                 size_t bufferLength = bytesPerPixel * width * height;
                 DKObject<DKGpuBuffer> stagingBuffer = device->CreateBuffer(bufferLength, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
-                
+
                 memcpy(stagingBuffer->Contents(), image->Contents(), bufferLength);
                 stagingBuffer->Flush();
 
@@ -211,7 +211,7 @@ public:
 		samplerDesc.addressModeV = DKSamplerDescriptor::AddressModeClampToEdge;
 		samplerDesc.addressModeW = DKSamplerDescriptor::AddressModeClampToEdge;
 		samplerDesc.maxAnisotropy = 16;
-		
+
 		DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
 
         // create shaders
@@ -230,7 +230,7 @@ public:
 			DKLog("  --> VertexAttribute[%d]: \"%ls\" (location:%u)", i, (const wchar_t*)attr.name, attr.location);
 		}
 
-	
+
 		uint32_t vertexBufferSize = static_cast<uint32_t>(SampleMesh->GetVerticesCount()) * sizeof(SampleObjMesh::Vertex);
 		uint32_t indexBufferSize = SampleMesh->GetIndicesCount() * sizeof(uint32_t);
 
@@ -249,9 +249,9 @@ public:
         // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
-        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = false;
-        pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
-        pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = false;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
         // setup depth-stencil
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float;
         pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;
@@ -326,7 +326,7 @@ public:
                 //memcpy(uboBuffer->Contents(), &ubo, sizeof(ubo));
                 bindSet->SetBuffer(0, uboBuffer, 0, sizeof(UBO));
             }
-			         
+
             bindSet->SetTexture(1, texture);
             bindSet->SetSamplerState(1, sampler);
         }
@@ -336,7 +336,7 @@ public:
         DKCamera camera;
         DKVector3 cameraPosition = { 0, 5, 10 };
         DKVector3 cameraTartget = { 0, 0, 0 };
-		
+
         DKAffineTransform3 tm(DKLinearTransform3().Scale(5).Rotate(DKVector3(-1,0,0), DKGL_PI * 0.5));
 
         DKTimer timer;
