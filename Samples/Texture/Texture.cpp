@@ -35,7 +35,7 @@ public:
 
                 size_t bufferLength = bytesPerPixel * width * height;
                 DKObject<DKGpuBuffer> stagingBuffer = device->CreateBuffer(bufferLength, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
-                
+
                 memcpy(stagingBuffer->Contents(), image->Contents(), bufferLength);
                 stagingBuffer->Flush();
 
@@ -111,9 +111,9 @@ public:
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
-        pipelineDescriptor.colorAttachments.Value(0).blendingEnabled = true;
-        pipelineDescriptor.colorAttachments.Value(0).sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
-        pipelineDescriptor.colorAttachments.Value(0).destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = true;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
+        pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, 0, 0, 0 },
