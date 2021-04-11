@@ -140,7 +140,7 @@ public:
 	{
 
 		DKLog("Loading Mesh");
-        DKString path = resourcePool.ResourceFilePath("meshes/chalet.obj");
+        DKString path = resourcePool.ResourceFilePath("meshes/chalet/chalet.obj");
 		SampleMesh->LoadFromObjFile(DKStringU8(path));
 	}
 
