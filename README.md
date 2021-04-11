@@ -17,6 +17,8 @@ Clone to the just-upper directory(..\) is the best choice.
 DK folder has been set up as ignore folder in this repository. 
 
 
+-----
+
 1. 적당한 디렉토리에 DKGL 을 클론 받는다.
    보통 상위 디렉토리 (현재 프로젝트:DKGL_Samples 와 동일한 레벨) 에 받는것이 좋다.. 
    ex)  C:\MyProjects\
