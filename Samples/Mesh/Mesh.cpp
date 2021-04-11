@@ -140,7 +140,7 @@ public:
 	{
 
 		DKLog("Loading Mesh");
-        DKString path = resourcePool.ResourceFilePath("meshes/chalet/chalet.obj");
+        DKString path = resourcePool.ResourceFilePath("meshes/car/car.obj");
 		SampleMesh->LoadFromObjFile(DKStringU8(path));
 	}
 
@@ -202,7 +202,7 @@ public:
         DKObject<DKCommandQueue> queue = device->CreateCommandQueue(DKCommandQueue::Graphics);
 
 		// create texture
-		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("meshes/chalet.png"));
+		DKObject<DKTexture> texture = LoadTexture2D(queue, resourcePool.LoadResourceData("meshes/chalet/chalet.png"));
 		// create sampler
 		DKSamplerDescriptor samplerDesc = {};
 		samplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
