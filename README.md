@@ -16,6 +16,8 @@ Clone to the just-upper directory(..\) is the best choice.
 3. You should work DKGL and DKGL_Sample seperately. 
 DK folder has been set up as ignore folder in this repository. 
 
+This project is using https://www.dkscript.com/ for wiki.
+
 
 -----
 
