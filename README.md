@@ -1,4 +1,4 @@
-# DKGL_SAMPLE
+# DKGL_Samples
 ScratchPad for DKGL-Dev Branch (Not the master branch), Let's have fun
 
 Let's have fun with DKGL
