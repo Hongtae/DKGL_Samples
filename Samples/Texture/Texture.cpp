@@ -35,7 +35,7 @@ public:
 
                 size_t bufferLength = bytesPerPixel * width * height;
                 DKObject<DKGpuBuffer> stagingBuffer = device->CreateBuffer(bufferLength, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
-                
+
                 memcpy(stagingBuffer->Contents(), image->Contents(), bufferLength);
                 stagingBuffer->Flush();
 

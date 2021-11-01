@@ -23,7 +23,7 @@ private:
 
 public:
     UVQuad() = default;
-    
+
     size_t VerticesCount() const { return vertices.Count(); }
     size_t IndicesCount() const { return indices.Count(); }
     UVQuad::Vertex* VerticesData() { return vertices; }
@@ -134,7 +134,7 @@ public:
         descriptorSetPostCompute = device->CreateShaderBindingSet(descriptorSetLayout);
 
         uniformBuffer = device->CreateBuffer(sizeof(GraphicShaderBindingSet::UBO), DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
-        
+
         if (descriptorSetPreCompute)
         {
             if (uniformBuffer)
@@ -203,7 +203,7 @@ public:
 
                 size_t bufferLength = bytesPerPixel * width * height;
                 DKObject<DKGpuBuffer> stagingBuffer = device->CreateBuffer(bufferLength, DKGpuBuffer::StorageModeShared, DKCpuCacheModeReadWrite);
-                
+
                 memcpy(stagingBuffer->Contents(), image->Contents(), bufferLength);
                 stagingBuffer->Flush();
 
@@ -295,7 +295,7 @@ public:
                             DKTexture::UsageSampled;    // For FragmentShader
             return device->CreateTexture(texDesc);
         }(graphicsQueue->Device(), sourceTexture->Width(), sourceTexture->Height());
-		
+
         // create sampler for fragment-shader
 		DKSamplerDescriptor samplerDesc = {};
 		samplerDesc.magFilter = DKSamplerDescriptor::MinMagFilterLinear;
@@ -306,7 +306,7 @@ public:
 		samplerDesc.maxAnisotropy = 1;
         DKObject<DKSamplerState> sampler = device->CreateSamplerState(samplerDesc);
 
-		
+
 		DKObject<DKSwapChain> swapChain = graphicsQueue->CreateSwapChain(window);
 
 		DKLog("VertexFunction.VertexAttributes: %d", vsf->StageInputAttributes().Count());
@@ -316,12 +316,12 @@ public:
 			DKLog("  --> VertexAttribute[%d]: \"%ls\" (location:%u)", i, (const wchar_t*)attr.name, attr.location);
 		}
 
-		
+
         DKRenderPipelineDescriptor pipelineDescriptor = {};
         // setup shader
         pipelineDescriptor.vertexFunction = vsf;
 		pipelineDescriptor.fragmentFunction = fsf;
-        
+
         // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
 		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
@@ -332,7 +332,7 @@ public:
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::D32Float;
         pipelineDescriptor.depthStencilDescriptor.depthWriteEnabled = true;
         pipelineDescriptor.depthStencilDescriptor.depthCompareFunction = DKCompareFunctionLessEqual;
-   
+
         // setup vertex buffer and attributes
         pipelineDescriptor.vertexDescriptor = quad->VertexDescriptor();
 
@@ -385,9 +385,9 @@ public:
         DKComputePipelineDescriptor embossComputePipelineDescriptor = {};
         embossComputePipelineDescriptor.computeFunction = cs_ef;
         DKObject<DKComputePipelineState> emboss = device->CreateComputePipeline(embossComputePipelineDescriptor);
-        
+
         DKObject<DKTexture> depthBuffer = nullptr;
-      
+
         DKTimer timer;
 		timer.Reset();
 
@@ -426,7 +426,7 @@ public:
             rpd.depthStencilAttachment.loadAction = DKRenderPassAttachmentDescriptor::LoadActionClear;
             rpd.depthStencilAttachment.storeAction = DKRenderPassAttachmentDescriptor::StoreActionDontCare;
 
-            
+
             DKObject<DKComputeCommandEncoder> computeEncoder = nullptr;
             DKObject<DKRenderCommandEncoder> renderEncoder = nullptr;
 
