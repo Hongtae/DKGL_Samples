@@ -10,7 +10,6 @@
 		66DA89941DD3117F00338015 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Texture.cpp */; };
 		66DA89971DD3118000338015 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 844A9A801DD0C080007DCC89 /* Texture.cpp */; };
 		8406D1D821E715E400E0EA0F /* libDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8406D1BF21E701FF00E0EA0F /* libDK.a */; };
-		8406D1F921E71C5500E0EA0F /* libDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8406D1C121E701FF00E0EA0F /* libDK.a */; };
 		841948EB1DDCBE6000E039F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 841948E91DDCBE5000E039F0 /* AppDelegate.m */; };
 		841948EF1DDCBE7B00E039F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 841948ED1DDCBE7500E039F0 /* AppDelegate.m */; };
 		8420EE201EE5BA6500A20933 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 8420EE1F1EE5BA6500A20933 /* Data */; };
@@ -20,6 +19,7 @@
 		844A9A8D1DD0C08F007DCC89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 844A9A761DD0C080007DCC89 /* LaunchScreen.storyboard */; };
 		84B5FE4E20726C3600B52742 /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
 		84B5FE4F20726C3600B52742 /* dkgl_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5FE4B20726C3600B52742 /* dkgl_new.cpp */; };
+		84BAF0A6273034A400515404 /* libDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8406D1C121E701FF00E0EA0F /* libDK.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,13 +58,6 @@
 			remoteGlobalIDString = 84C5F9EC13013FDD005F4449;
 			remoteInfo = DK_iOS_static;
 		};
-		8406D1DB21E715FD00E0EA0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 840D5D3A1DDA07B2009DA369 /* DK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = DK_macOS_static;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -97,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8406D1F921E71C5500E0EA0F /* libDK.a in Frameworks */,
+				84BAF0A6273034A400515404 /* libDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +215,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				8406D1DC21E715FD00E0EA0F /* PBXTargetDependency */,
 			);
 			name = Texture_macOS;
 			productName = TestApp1;
@@ -272,6 +264,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -374,11 +367,6 @@
 			name = DK_iOS_static;
 			targetProxy = 8406D1D921E715F400E0EA0F /* PBXContainerItemProxy */;
 		};
-		8406D1DC21E715FD00E0EA0F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = DK_macOS_static;
-			targetProxy = 8406D1DB21E715FD00E0EA0F /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -428,7 +416,8 @@
 					../../DK,
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -473,6 +462,8 @@
 					../../DK,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -485,7 +476,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/../Common/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.triangle-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -499,7 +489,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/../Common/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.triangle-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -516,7 +505,6 @@
 				DEVELOPMENT_TEAM = F599L375TZ;
 				INFOPLIST_FILE = "$(SRCROOT)/../Common/iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.triangle-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -535,7 +523,6 @@
 				DEVELOPMENT_TEAM = F599L375TZ;
 				INFOPLIST_FILE = "$(SRCROOT)/../Common/iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.palcube.triangle-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
