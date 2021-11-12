@@ -110,54 +110,44 @@ const char* ShaderDataTypeStr(DKShaderDataType t)
     return "Error";
 }
 
+void PrintShaderResourceStructMember(const DKShaderResourceStructMember& member,
+                                     const DKString prefix,
+                                     int indent,
+                                     DKLogCategory c = DKLogCategory::Info)
+{
+    DKString indentStr = "";
+    for (int i = 0; i < indent; ++i)
+    {
+        indentStr += "    ";
+    }
+
+    if (member.count > 1)
+    {
+        DKLog(c, "%ls %ls+ %ls[%d] (%s, Offset: %d, size: %d, stride: %d)",
+              (const wchar_t*)prefix,
+              (const wchar_t*)indentStr,
+              (const wchar_t*)member.name,
+              member.count,
+              ShaderDataTypeStr(member.dataType),
+              member.offset, member.size, member.stride);
+    }
+    else
+    {
+        DKLog(c, "%ls %ls+ %ls (%s, Offset: %d, size: %d)",
+              (const wchar_t*)prefix,
+              (const wchar_t*)indentStr,
+              (const wchar_t*)member.name,
+              ShaderDataTypeStr(member.dataType),
+              member.offset, member.size);
+    }
+    for (const DKShaderResourceStructMember& mem : member.members)
+    {
+        PrintShaderResourceStructMember(mem, prefix, indent + 1, c);
+    }
+}
+
 void PrintShaderResource(const DKShaderResource& res, DKLogCategory c = DKLogCategory::Info)
 {
-    struct MemberPrinter
-    {
-        const DKShaderResource& res;
-        int indent;
-        DKLogCategory c;
-        void operator()(const DKShaderResourceStruct& str) const
-        {
-            DKString indentStr = "";
-            for (int i = 0; i < indent; ++i)
-            {
-                indentStr += "    ";
-            }
-            for (const DKShaderResourceStructMember& mem : str.members)
-            {
-                if (mem.count > 1)
-                {
-                    DKLog(c, " %ls+ %ls[%d] (%s, Offset: %d, Stride: %d)",
-                        (const wchar_t*)indentStr,
-                        (const wchar_t*)mem.name,
-                        mem.count,
-                        ShaderDataTypeStr(mem.dataType),
-                        mem.offset, mem.stride);
-
-                }
-                else
-                {
-                    DKLog(c, " %ls+ %ls (%s, Offset: %d)",
-                        (const wchar_t*)indentStr,
-                        (const wchar_t*)mem.name,
-                        ShaderDataTypeStr(mem.dataType),
-                        mem.offset);
-                }
-
-                auto* p = res.structTypeMemberMap.Find(mem.typeInfoKey);
-                if (p)
-                {
-                    DKLog(c, " %ls  Struct \"%ls\"",
-                        (const wchar_t*)indentStr,
-                        (const wchar_t*)mem.typeInfoKey);
-                    MemberPrinter{ res, indent + 1, c }.operator()(p->value);
-                }
-            }
-        }
-    };
-
-
     if (res.count > 1)
         DKLog(c, "ShaderResource: %ls[%d] (set=%d, binding=%d, stages=%ls)",
         (const wchar_t*)res.name, res.count, res.set, res.binding,
@@ -190,6 +180,15 @@ void PrintShaderResource(const DKShaderResource& res, DKLogCategory c = DKLogCat
             access,
             int(res.enabled),
             res.typeInfo.buffer.size);
+
+        if (res.typeInfo.buffer.dataType == DKShaderDataType::Struct)
+        {
+            DKLog(c, " Struct \"%ls\"", (const wchar_t*)res.name);
+            for (const DKShaderResourceStructMember& mem : res.members)
+            {
+                PrintShaderResourceStructMember(mem, "", 1, c);
+            }
+        }
     }
     else
     {
@@ -197,14 +196,6 @@ void PrintShaderResource(const DKShaderResource& res, DKLogCategory c = DKLogCat
             type,
             access,
             int(res.enabled));
-    }
-    if (res.typeInfoKey.Length() > 0)
-        DKLog(c, " Struct \"%ls\"", (const wchar_t*)res.typeInfoKey);
-    if (res.type == DKShaderResource::TypeBuffer)
-    {
-        auto p = res.structTypeMemberMap.Find(res.typeInfoKey);
-        if (p)
-            MemberPrinter{ res, 1 , c }.operator()(p->value);
     }
 }
 
@@ -243,6 +234,8 @@ void PrintShaderReflection(const DKShader* shader, DKLogCategory c = DKLogCatego
         DKLog(c, " PushConstant:%d \"%ls\" (offset:%u, size:%u, stages:%ls)",
             i, (const wchar_t*)layout.name, layout.offset, layout.size,
             (const wchar_t*)ShaderStageNames(layout.stages));
+        for (auto& member : layout.members)
+            PrintShaderResourceStructMember(member, "", 1, c);
     }
     DKLog(c, "=========================================================");
 }
@@ -267,6 +260,8 @@ void PrintPipelineReflection(const DKPipelineReflection* reflection, DKLogCatego
         DKLog(c, " PushConstant:%d \"%ls\" (offset:%u, size:%u, stages:%ls)",
             i, (const wchar_t*)layout.name, layout.offset, layout.size,
             (const wchar_t*)ShaderStageNames(layout.stages));
+        for (auto& member : layout.members)
+            PrintShaderResourceStructMember(member, "", 1, c);
     }
     DKLog(c, "=========================================================");
 }
