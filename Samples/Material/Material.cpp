@@ -376,23 +376,30 @@ public:
                     DKQuaternion quat(DKVector3(0, 1, 0), t);
                     DKAffineTransform3 trans = tm * DKAffineTransform3(quat);
 
-                    DKMatrix4 projectionMatrix = camera.ProjectionMatrix();
-                    DKMatrix4 modelMatrix = trans.Matrix4();
-                    DKMatrix4 viewMatrix = camera.ViewMatrix();
+                    struct
+                    {
+                        DKMatrix4 projectionMatrix;
+                        DKMatrix4 modelMatrix;
+                        DKMatrix4 viewMatrix;
+                    } ubo;
+                    ubo.projectionMatrix = camera.ProjectionMatrix();
+                    ubo.modelMatrix = trans.Matrix4();
+                    ubo.viewMatrix = camera.ViewMatrix();
 
                     // update shader properties..
-                    mesh->structElementProperties.Value("ubo.projection") = {
-                        DKShaderDataType::Float4x4,
-                        { (uint8_t*)projectionMatrix.val, sizeof(DKMatrix4) }
-                    };
-                    mesh->structElementProperties.Value("ubo.model") = {
-                        DKShaderDataType::Float4x4,
-                        { (uint8_t*)modelMatrix.val, sizeof(DKMatrix4) }
-                    };
-                    mesh->structElementProperties.Value("ubo.view") = {
-                        DKShaderDataType::Float4x4,
-                        { (uint8_t*)viewMatrix.val, sizeof(DKMatrix4) }
-                    };
+                    bool bindstruct = true;
+                    if (bindstruct)
+                    {
+                        // bind struct 
+                        mesh->structProperties.Value("ubo").Set(&ubo, sizeof(ubo));
+                    }
+                    else
+                    {
+                        // bind struct elements separately
+                        mesh->structProperties.Value("ubo.projection").Set(ubo.projectionMatrix.val);
+                        mesh->structProperties.Value("ubo.model").Set(ubo.modelMatrix.val);
+                        mesh->structProperties.Value("ubo.view").Set(ubo.viewMatrix.val);
+                    }
 
                     mesh->UpdateMaterialProperties(nullptr);
                     mesh->EncodeRenderCommand(encoder, 1, 0);
