@@ -59,7 +59,7 @@ public:
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
-		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
+		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->PixelFormat();
 		pipelineDescriptor.depthStencilAttachmentPixelFormat = DKPixelFormat::Invalid; // no depth buffer
 		pipelineDescriptor.vertexDescriptor.attributes = {
 			{ DKVertexFormat::Float3, 0, 0, 0 },

@@ -310,7 +310,7 @@ public:
             material->colorAttachments = {
                 {
                     0, // render-target (color-attachment) index
-                    swapChain->ColorPixelFormat(),
+                    swapChain->PixelFormat(),
                     DKBlendState::defaultAlpha
                 }
             };

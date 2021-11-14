@@ -246,7 +246,7 @@ public:
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
         // setup color-attachment render-targets
 		pipelineDescriptor.colorAttachments.Resize(1);
-		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
+		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->PixelFormat();
         pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = false;
         pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
         pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;

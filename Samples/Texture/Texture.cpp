@@ -110,7 +110,7 @@ public:
 		pipelineDescriptor.vertexFunction = vertShaderFunction;
 		pipelineDescriptor.fragmentFunction = fragShaderFunction;
 		pipelineDescriptor.colorAttachments.Resize(1);
-		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->ColorPixelFormat();
+		pipelineDescriptor.colorAttachments.Value(0).pixelFormat = swapChain->PixelFormat();
         pipelineDescriptor.colorAttachments.Value(0).blendState.enabled = true;
         pipelineDescriptor.colorAttachments.Value(0).blendState.sourceRGBBlendFactor = DKBlendFactor::SourceAlpha;
         pipelineDescriptor.colorAttachments.Value(0).blendState.destinationRGBBlendFactor = DKBlendFactor::OneMinusSourceAlpha;
