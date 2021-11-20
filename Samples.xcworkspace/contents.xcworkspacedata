@@ -5,6 +5,9 @@
       location = "container:"
       name = "Samples">
       <FileRef
+         location = "group:Samples/Canvas/Canvas.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Samples/Material/Material.xcodeproj">
       </FileRef>
       <FileRef
