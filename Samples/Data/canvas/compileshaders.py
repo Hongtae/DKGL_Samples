@@ -39,12 +39,15 @@ for root, dirs, files in os.walk(dir_path):
             add_params = ""
             if args.g:
                 add_params = "-g"
+            else:
+                add_params = "-Os"
 
             if file.endswith(".rgen") or file.endswith(".rchit") or file.endswith(".rmiss"):
                add_params = add_params + " --target-env vulkan1.2"
 
             print(f"compiling '{file}' with params:'{add_params}' ...")
-            subp = "%s -V %s -o %s %s" % (glslang_path, input_file, output_file, add_params)
+            subp = "%s -V \"%s\" -o %s %s" % (glslang_path, input_file, output_file, add_params)
+            print(subp)
             res = subprocess.call(subp, shell=True)
             # res = subprocess.call([glslang_path, '-V', input_file, '-o', output_file, add_params], shell=True)
             if res != 0:
