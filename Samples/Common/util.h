@@ -31,81 +31,99 @@ DKString ShaderStageNames(uint32_t s)
 const char* ShaderDataTypeStr(DKShaderDataType t)
 {
     switch (t) {
-    case DKShaderDataType::Unknown:				return "Unknown";
-    case DKShaderDataType::None:				return "None";
+    case DKShaderDataType::Unknown:			return "Unknown";
+    case DKShaderDataType::None:			return "None";
 
-    case DKShaderDataType::Struct:				return "Struct";
-    case DKShaderDataType::Texture:				return "Texture";
-    case DKShaderDataType::Sampler:				return "Sampler";
+    case DKShaderDataType::Struct:			return "Struct";
+    case DKShaderDataType::Texture:			return "Texture";
+    case DKShaderDataType::Sampler:			return "Sampler";
 
-    case DKShaderDataType::Float:				return "Float";
-    case DKShaderDataType::Float2:				return "Float2";
-    case DKShaderDataType::Float3:				return "Float3";
-    case DKShaderDataType::Float4:				return "Float4";
+    case DKShaderDataType::Bool:            return "Bool";
+    case DKShaderDataType::BoolV2:          return "BoolV2";
+    case DKShaderDataType::BoolV3:          return "BoolV3";
+    case DKShaderDataType::BoolV4:          return "BoolV4";
 
-    case DKShaderDataType::Float2x2:			return "Float2x2";
-    case DKShaderDataType::Float2x3:			return "Float2x3";
-    case DKShaderDataType::Float2x4:			return "Float2x4";
+    case DKShaderDataType::Int8:            return "Int8";
+    case DKShaderDataType::Int8V2:          return "Int8V2";
+    case DKShaderDataType::Int8V3:          return "Int8V3";
+    case DKShaderDataType::Int8V4:          return "Int8V4";
 
-    case DKShaderDataType::Float3x2:			return "Float3x2";
-    case DKShaderDataType::Float3x3:			return "Float3x3";
-    case DKShaderDataType::Float3x4:			return "Float3x4";
+    case DKShaderDataType::UInt8:           return "UInt8";
+    case DKShaderDataType::UInt8V2:         return "UInt8V2";
+    case DKShaderDataType::UInt8V3:         return "UInt8V3";
+    case DKShaderDataType::UInt8V4:         return "UInt8V4";
 
-    case DKShaderDataType::Float4x2:			return "Float4x2";
-    case DKShaderDataType::Float4x3:			return "Float4x3";
-    case DKShaderDataType::Float4x4:			return "Float4x4";
+    case DKShaderDataType::Int16:           return "Int16";
+    case DKShaderDataType::Int16V2:         return "Int16V2";
+    case DKShaderDataType::Int16V3:         return "Int16V3";
+    case DKShaderDataType::Int16V4:         return "Int16V4";
 
-    case DKShaderDataType::Half:				return "Half";
-    case DKShaderDataType::Half2:				return "Half2";
-    case DKShaderDataType::Half3:				return "Half3";
-    case DKShaderDataType::Half4:				return "Half4";
+    case DKShaderDataType::UInt16:          return "UInt16";
+    case DKShaderDataType::UInt16V2:        return "UInt16V2";
+    case DKShaderDataType::UInt16V3:        return "UInt16V3";
+    case DKShaderDataType::UInt16V4:        return "UInt16V4";
 
-    case DKShaderDataType::Half2x2:				return "Half2x2";
-    case DKShaderDataType::Half2x3:				return "Half2x3";
-    case DKShaderDataType::Half2x4:				return "Half2x4";
+    case DKShaderDataType::Int32:           return "Int32";
+    case DKShaderDataType::Int32V2:         return "Int32V2";
+    case DKShaderDataType::Int32V3:         return "Int32V3";
+    case DKShaderDataType::Int32V4:         return "Int32V4";
 
-    case DKShaderDataType::Half3x2:				return "Half3x2";
-    case DKShaderDataType::Half3x3:				return "Half3x3";
-    case DKShaderDataType::Half3x4:				return "Half3x4";
+    case DKShaderDataType::UInt32:          return "UInt32";
+    case DKShaderDataType::UInt32V2:        return "UInt32V2";
+    case DKShaderDataType::UInt32V3:        return "UInt32V3";
+    case DKShaderDataType::UInt32V4:        return "UInt32V4";
 
-    case DKShaderDataType::Half4x2:				return "Half4x2";
-    case DKShaderDataType::Half4x3:				return "Half4x3";
-    case DKShaderDataType::Half4x4:				return "Half4x4";
+    case DKShaderDataType::Int64:           return "Int64";
+    case DKShaderDataType::Int64V2:         return "Int64V2";
+    case DKShaderDataType::Int64V3:         return "Int64V3";
+    case DKShaderDataType::Int64V4:         return "Int64V4";
 
-    case DKShaderDataType::Int:					return "Int";
-    case DKShaderDataType::Int2:				return "Int2";
-    case DKShaderDataType::Int3:				return "Int3";
-    case DKShaderDataType::Int4:				return "Int4";
+    case DKShaderDataType::UInt64:          return "UInt64";
+    case DKShaderDataType::UInt64V2:        return "UInt64V2";
+    case DKShaderDataType::UInt64V3:        return "UInt64V3";
+    case DKShaderDataType::UInt64V4:        return "UInt64V4";
 
-    case DKShaderDataType::UInt:				return "UInt";
-    case DKShaderDataType::UInt2:				return "UInt2";
-    case DKShaderDataType::UInt3:				return "UInt3";
-    case DKShaderDataType::UInt4:				return "UInt4";
+    case DKShaderDataType::Float16:         return "Float16";
+    case DKShaderDataType::Float16V2:       return "Float16V2";
+    case DKShaderDataType::Float16V3:       return "Float16V3";
+    case DKShaderDataType::Float16V4:       return "Float16V4";
+    case DKShaderDataType::Float16M2x2:     return "Float16M2x2";
+    case DKShaderDataType::Float16M3x2:     return "Float16M3x2";
+    case DKShaderDataType::Float16M4x2:     return "Float16M4x2";
+    case DKShaderDataType::Float16M2x3:     return "Float16M2x3";
+    case DKShaderDataType::Float16M3x3:     return "Float16M3x3";
+    case DKShaderDataType::Float16M4x3:     return "Float16M4x3";
+    case DKShaderDataType::Float16M2x4:     return "Float16M2x4";
+    case DKShaderDataType::Float16M3x4:     return "Float16M3x4";
+    case DKShaderDataType::Float16M4x4:     return "Float16M4x4";
 
-    case DKShaderDataType::Short:				return "Short";
-    case DKShaderDataType::Short2:				return "Short2";
-    case DKShaderDataType::Short3:				return "Short3";
-    case DKShaderDataType::Short4:				return "Short4";
+    case DKShaderDataType::Float32:         return "Float32";
+    case DKShaderDataType::Float32V2:       return "Float32V2";
+    case DKShaderDataType::Float32V3:       return "Float32V3";
+    case DKShaderDataType::Float32V4:       return "Float32V4";
+    case DKShaderDataType::Float32M2x2:     return "Float32M2x2";
+    case DKShaderDataType::Float32M3x2:     return "Float32M3x2";
+    case DKShaderDataType::Float32M4x2:     return "Float32M4x2";
+    case DKShaderDataType::Float32M2x3:     return "Float32M2x3";
+    case DKShaderDataType::Float32M3x3:     return "Float32M3x3";
+    case DKShaderDataType::Float32M4x3:     return "Float32M4x3";
+    case DKShaderDataType::Float32M2x4:     return "Float32M2x4";
+    case DKShaderDataType::Float32M3x4:     return "Float32M3x4";
+    case DKShaderDataType::Float32M4x4:     return "Float32M4x4";
 
-    case DKShaderDataType::UShort:				return "UShort";
-    case DKShaderDataType::UShort2:				return "UShort2";
-    case DKShaderDataType::UShort3:				return "UShort3";
-    case DKShaderDataType::UShort4:				return "UShort4";
-
-    case DKShaderDataType::Char:				return "Char";
-    case DKShaderDataType::Char2:				return "Char2";
-    case DKShaderDataType::Char3:				return "Char3";
-    case DKShaderDataType::Char4:				return "Char4";
-
-    case DKShaderDataType::UChar:				return "UChar";
-    case DKShaderDataType::UChar2:				return "UChar2";
-    case DKShaderDataType::UChar3:				return "UChar3";
-    case DKShaderDataType::UChar4:				return "UChar4";
-
-    case DKShaderDataType::Bool:				return "Bool";
-    case DKShaderDataType::Bool2:				return "Bool2";
-    case DKShaderDataType::Bool3:				return "Bool3";
-    case DKShaderDataType::Bool4:				return "Bool4";
+    case DKShaderDataType::Float64:         return "Float64";
+    case DKShaderDataType::Float64V2:       return "Float64V2";
+    case DKShaderDataType::Float64V3:       return "Float64V3";
+    case DKShaderDataType::Float64V4:       return "Float64V4";
+    case DKShaderDataType::Float64M2x2:     return "Float64M2x2";
+    case DKShaderDataType::Float64M3x2:     return "Float64M3x2";
+    case DKShaderDataType::Float64M4x2:     return "Float64M4x2";
+    case DKShaderDataType::Float64M2x3:     return "Float64M2x3";
+    case DKShaderDataType::Float64M3x3:     return "Float64M3x3";
+    case DKShaderDataType::Float64M4x3:     return "Float64M4x3";
+    case DKShaderDataType::Float64M2x4:     return "Float64M2x4";
+    case DKShaderDataType::Float64M3x4:     return "Float64M3x4";
+    case DKShaderDataType::Float64M4x4:     return "Float64M4x4";
     }
     return "Error";
 }
